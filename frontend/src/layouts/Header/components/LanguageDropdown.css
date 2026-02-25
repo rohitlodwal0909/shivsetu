@@ -1,0 +1,113 @@
+.language-dropdown {
+    position: relative;
+}
+
+.language-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.language-dropdown-trigger:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+}
+
+.language-icon {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.language-name {
+    min-width: 50px;
+}
+
+.chevron-icon {
+    font-size: 10px;
+    color: #9ca3af;
+    transition: transform 0.2s ease;
+}
+
+.chevron-icon.rotate {
+    transform: rotate(180deg);
+}
+
+.language-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 140px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    z-index: 1000;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 14px;
+    background: white;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.language-option:hover {
+    background: #f3f4f6;
+}
+
+.language-option.active {
+    background: #fef3f2;
+    color: #e14503;
+}
+
+.language-option-name {
+    flex: 1;
+}
+
+.check-icon {
+    width: 16px;
+    height: 16px;
+    color: #e14503;
+}
+
+@media (max-width: 768px) {
+    .language-dropdown-trigger {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .language-name {
+        display: none;
+    }
+}
