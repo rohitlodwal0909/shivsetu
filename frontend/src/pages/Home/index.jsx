@@ -35,7 +35,7 @@ const Home = () => {
             <FeaturedProductsNew products={data?.products}/>
             {/* <NewArrivals /> */}
 
-            <DarshanSection />
+            <DarshanSection tours={data?.tour}/>
             <BookCabs cabs={data?.cabs}/>
             <ChadavaBooking />
             <PanditBooking />

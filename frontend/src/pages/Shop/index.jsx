@@ -9,9 +9,10 @@ import ProductCard from '../../components/common/ProductCard';
 import Pagination from '../../components/common/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProduct } from '../../features/shop/ProductSlice';
-
+import { useLocation } from 'react-router-dom';
 const Shop = () => {
-
+    
+const location = useLocation();
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [priceRange, setPriceRange] = useState(5000);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -31,12 +32,24 @@ const Shop = () => {
         dispatch(getProduct());
     }, [dispatch]);
 
+    useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const categoryFromUrl = params.get('category');
+            console.log(categoryFromUrl)
+
+
+    if (categoryFromUrl) {
+        setSelectedCategory(categoryFromUrl);
+    }
+}, [location.search]);
+
     // Dynamic Categories
     const categories = [
         { id: 'All', name: 'All' },
         ...category.map((cat) => ({
             id: cat.name,
-            name: cat.name
+            name: cat.name,
+            slug: cat.slug,
         }))
     ];
 
@@ -44,7 +57,7 @@ const Shop = () => {
     const filteredProducts = products.filter((product) => {
         const categoryMatch =
             selectedCategory === 'All' ||
-            product.category?.name === selectedCategory;
+            product.category?.slug === selectedCategory;
 
         const priceMatch = product.price <= priceRange;
 

@@ -112,7 +112,6 @@ const PremiumCategories = ({categories}) => {
                 </div>
 
                 <div className="relative">
-
                     {/* Desktop Navigation Arrows */}
                     <button
                         onClick={prevSlide}
@@ -136,9 +135,9 @@ const PremiumCategories = ({categories}) => {
                         {categories?.map((category) => (
                             <Link
                                 key={category.id}
-                                to={category.slug}
-                                className="flex-shrink-0 w-24 flex flex-col items-center gap-2 snap-center"
-                            >
+                                to={`/shop?category=${encodeURIComponent(category.slug)}`}                               
+                                className="flex-shrink-0
+                                 w-24 flex flex-col items-center gap-2 snap-center">
                                 <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 shadow-sm">
                                     <SafeImage
                                         src={category.icon}
@@ -165,7 +164,7 @@ const PremiumCategories = ({categories}) => {
                             {categories?.map((category, index) => (
                                 <Link
                                     key={`${category.id}-${index}`}
-                                    to={category.slug}
+                                to={`/shop?category=${encodeURIComponent(category.slug)}`}                               
                                     className="group flex-shrink-0"
                                     style={{ width: `calc((100% - ${(itemsVisible - 1)} * 1.5rem) / ${itemsVisible})` }}
                                 >

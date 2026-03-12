@@ -12,6 +12,8 @@ import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import PageHeader from '../../components/common/PageHeader';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMyOrders } from '../../features/order/OrderSlice';
 
 const MyProfile = () => {
     const { isHindi, language, toggleLanguage } = useLanguage();
@@ -24,27 +26,48 @@ const MyProfile = () => {
     const [trackingResult, setTrackingResult] = useState(null);
     const { addToCart } = useCart();
 
+    const dispatch = useDispatch();
+
     // Mobile: which panel is open (null = show main menu)
     const [mobilePanel, setMobilePanel] = useState(null);
 
+    const data = useSelector((state) => state.order.orders);
+
+    const orders = data.orders;
+
+    useEffect(() => {
+    if(activeTab == "orders"){
+        dispatch(getMyOrders()).unwrap()
+     }
+    },[activeTab])
+
+
     const [profileData, setProfileData] = useState({
-        firstName: 'Rahul',
-        lastName: 'Sharma',
-        email: 'rahul.sharma@example.com',
-        phone: '+91 98765 43210',
-        address: '123, Spiritual Lane, Temple Road',
-        city: 'Mumbai',
-        state: 'Maharashtra',
-        pincode: '400001'
+        firstName: "",
+        lastName: '',
+        email: "",
+        phone: "",
+        address: '',
+        city: '',
+        state: '',
+        pincode: ''
     });
+
+    useEffect(() => {
+       setProfileData({ ...profileData, firstName:user?.name,
+         email: user?.email,
+        phone: user?.mobile,
+       })
+    },[user])
+
 
     const [editedData, setEditedData] = useState({ ...profileData });
 
-    const orders = [
-        { id: 'ORD-2024-0001', date: '2024-01-15', status: 'Delivered', total: 1299, items: 3 },
-        { id: 'ORD-2024-0002', date: '2024-01-20', status: 'In Transit', total: 549, items: 1 },
-        { id: 'ORD-2024-0003', date: '2024-01-25', status: 'Processing', total: 899, items: 2 }
-    ];
+    // const orders = [
+    //     { id: 'ORD-2024-0001', date: '2024-01-15', status: 'Delivered', total: 1299, items: 3 },
+    //     { id: 'ORD-2024-0002', date: '2024-01-20', status: 'In Transit', total: 549, items: 1 },
+    //     { id: 'ORD-2024-0003', date: '2024-01-25', status: 'Processing', total: 899, items: 2 }
+    // ];
 
     const tabs = [
         { id: 'profile', label: isHindi ? 'प्रोफ़ाइल' : 'Profile', icon: FaUser },
@@ -168,7 +191,7 @@ const MyProfile = () => {
                 return (
                     <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-200">
                         <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6">{isHindi ? 'ऑर्डर इतिहास' : 'Order History'}</h2>
-                        {orders.length === 0 ? (
+                        {orders?.length === 0 ? (
                             <div className="text-center py-12">
                                 <FaBox className="text-gray-300 text-5xl mx-auto mb-4" />
                                 <p className="text-gray-600">{isHindi ? 'अभी तक कोई ऑर्डर नहीं' : 'No orders yet'}</p>
@@ -178,20 +201,25 @@ const MyProfile = () => {
                             </div>
                         ) : (
                             <div className="space-y-4">
-                                {orders.map((order) => (
-                                    <div key={order.id} className="border border-gray-200 rounded-xl p-4 md:p-6 hover:border-[#e14503] transition-colors">
+                                {orders?.map((order) => (
+                                    <div key={order?.id} className="border border-gray-200 rounded-xl p-4 md:p-6 hover:border-[#e14503] transition-colors">
                                         <div className="flex items-center justify-between mb-3">
                                             <div>
-                                                <h3 className="font-bold text-gray-900 text-sm md:text-base">{order.id}</h3>
-                                                <p className="text-xs md:text-sm text-gray-600">{order.date}</p>
+                                                <h3 className="font-bold text-gray-900 text-sm md:text-base">{order.order_number}</h3>
+                                                <p className="text-xs md:text-sm text-gray-600">{order.created_at}</p>
                                             </div>
-                                            <span className={`px-3 py-1 rounded-full text-xs md:text-sm font-semibold ${getStatusColor(order.status)}`}>
-                                                {getStatusLabel(order.status)}
+                                            <span className={`px-3 py-1 rounded-full text-xs md:text-sm font-semibold ${getStatusColor(order.order_status)}`}>
+                                                {getStatusLabel(order.order_status)}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between">
-                                            <p className="text-gray-600 text-sm">{order.items} {isHindi ? 'आइटम' : 'item(s)'}</p>
-                                            <p className="text-lg md:text-xl font-bold text-[#e14503]">₹{order.total}</p>
+                                                            <p className="text-gray-600 text-sm">
+                                                            {(Array.isArray(order.items)
+                                                                ? order.items
+                                                                : JSON.parse(order.items || "[]")
+                                                            ).reduce((sum, item) => sum + (item.quantity || 0), 0)} item(s)
+                                                            </p>
+                                        <p className="text-lg md:text-xl font-bold text-[#e14503]">₹{order.total_amount}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -442,7 +470,7 @@ const MyProfile = () => {
                     <div className="flex items-center gap-4">
                         <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/40">
                             <span className="text-white text-xl font-bold">
-                                {profileData.firstName[0]}{profileData.lastName[0]}
+                                {profileData.firstName}
                             </span>
                         </div>
                         <div className="flex-1 min-w-0">
@@ -630,7 +658,7 @@ const MyProfile = () => {
                                 <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
                                     <div className="w-16 h-16 bg-[#e14503] rounded-full flex items-center justify-center">
                                         <span className="text-white text-2xl font-bold">
-                                            {profileData.firstName[0]}{profileData.lastName[0]}
+                                            {profileData.firstName}{profileData.lastName}
                                         </span>
                                     </div>
                                     <div>

@@ -8,6 +8,7 @@ import { bookPuja } from '../../../features/puja/PujaSlice';
 import { useDispatch } from 'react-redux';
 
 const BookingStepper = ({ pujaDetails, serviceType = 'puja' }) => {
+
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState(null);
     const dispatch = useDispatch();
@@ -44,11 +45,9 @@ const BookingStepper = ({ pujaDetails, serviceType = 'puja' }) => {
     ];
 
     return (
-        <div className="bg-white/90 backdrop-blur-2xl border border-white/50 rounded-3xl shadow-xl shadow-orange-100/50 overflow-hidden relative transition-all duration-300 hover:shadow-2xl hover:shadow-orange-200/50">
-            
+        <div className="bg-white/90 backdrop-blur-2xl border border-white/50 rounded-3xl shadow-xl shadow-orange-100/50 overflow-hidden relative transition-all duration-300 hover:shadow-2xl hover:shadow-orange-200/50">  
             <div className="absolute top-0 right-0 w-40 h-40 bg-orange-400/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
             <div className="absolute bottom-0 left-0 w-40 h-40 bg-purple-400/10 rounded-full blur-3xl -z-10 animate-pulse delay-700"></div>
-
             <div className="p-6 pb-0">
                 <div className="flex items-center justify-between mb-8">
                     <div>

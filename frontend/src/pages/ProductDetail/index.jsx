@@ -5,7 +5,6 @@ import {
     FaArrowLeft, FaChevronRight, FaChevronDown, FaChevronUp, FaCheckCircle, FaListUl, FaCogs, FaComments
 } from 'react-icons/fa';
 import { AnimatePresence, motion } from 'framer-motion';
-import religiousProducts from '../../data/products';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -46,7 +45,6 @@ const AccordionItem = ({ title, children, isOpen, onClick, icon: Icon }) => (
 
 const ProductDetail = () => {
     const { slug } = useParams();
-    const id = 2;
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState(0);
@@ -61,70 +59,18 @@ const ProductDetail = () => {
     const dispatch = useDispatch();
 
     const data = useSelector((state) => state.product.product);
-
-
-    console.log(religiousProducts)
     const products = data?.product;
     const product_name = products?.product_name;
     const gallery = products?.gallery.length > 0  ? JSON.parse(products?.gallery) : [] ;
-
 
     useEffect(() => {
     dispatch(getProductWithSlug(slug))
     },[dispatch])
 
 
-    const foundProduct = religiousProducts.find(p => p.id === parseInt(id));
 
-    const product = foundProduct ? {
-        ...foundProduct,
-        images: [
-            foundProduct.image,
-            'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80',
-            'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?auto=format&fit=crop&w=800&q=80',
-            'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80'
-        ],
-        brand: 'Divine Collection',
-        description: (isHindi ? foundProduct.name : foundProduct.nameEn) + (isHindi
-            ? ' - आपके घर के मंदिर के लिए या एक सार्थक उपहार के रूप में एक सुंदर आध्यात्मिक वस्तु। प्रीमियम सामग्री और पारंपरिक शिल्प कौशल के साथ बनाया गया।'
-            : ' - A beautifully crafted spiritual item perfect for your home temple or as a meaningful gift. Made with premium materials and traditional craftsmanship.'),
-        features: isHindi ? [
-            'प्रीमियम गुणवत्ता सामग्री',
-            'पारंपरिक शिल्प कौशल',
-            'घर के मंदिरों के लिए बिल्कुल सही',
-            'उपहार देने के लिए आदर्श',
-            'प्रामाणिक डिजाइन',
-            'सावधानीपूर्वक पैक किया गया'
-        ] : [
-            'Premium quality materials',
-            'Traditional craftsmanship',
-            'Perfect for home temples',
-            'Ideal for gifting',
-            'Authentic design',
-            'Carefully packaged'
-        ],
-        specifications: {
-            [isHindi ? 'सामग्री' : 'Material']: isHindi ? 'प्रीमियम गुणवत्ता' : 'Premium Quality',
-            [isHindi ? 'मूल' : 'Origin']: isHindi ? 'भारत' : 'India',
-            [isHindi ? 'वजन' : 'Weight']: isHindi ? 'आकार के अनुसार बदलता है' : 'Varies by size',
-            [isHindi ? 'आयाम' : 'Dimensions']: isHindi ? 'मानक आकार' : 'Standard Size',
-            [isHindi ? 'देखभाल' : 'Care']: isHindi ? 'कोमल सफाई की सलाह दी जाती है' : 'Gentle cleaning recommended',
-            [isHindi ? 'वारंटी' : 'Warranty']: isHindi ? '30 दिन की वापसी नीति' : '30 days return policy'
-        }
-    } : {
-        id: 1, name: 'Premium Religious Item', nameEn: 'Premium Religious Item',
-        price: 199, originalPrice: 299, discount: 33, rating: 4.8, reviews: 256,
-        category: 'Religious Items', brand: 'Divine Collection', inStock: true,
-        images: [
-            'https://images.unsplash.com/photo-1580713980148-64611e55fa40?auto=format&fit=crop&w=800&q=80',
-            'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80',
-            'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?auto=format&fit=crop&w=800&q=80',
-            'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80'
-        ],
-        description: 'A beautifully crafted spiritual item perfect for your home temple or as a meaningful gift.',
-        features: ['Premium quality materials', 'Traditional craftsmanship', 'Perfect for home temples', 'Ideal for gifting', 'Authentic design', 'Carefully packaged'],
-        specifications: { 'Material': 'Premium Quality', 'Origin': 'India', 'Weight': 'Varies by size', 'Dimensions': 'Standard Size', 'Care': 'Gentle cleaning recommended', 'Warranty': '30 days return policy' }
-    };
+    const features = ['Premium quality materials', 'Traditional craftsmanship', 'Perfect for home temples', 'Ideal for gifting', 'Authentic design', 'Carefully packaged'];
+    const  specifications = { 'Material': 'Premium Quality', 'Origin': 'India', 'Weight': 'Varies by size', 'Dimensions': 'Standard Size', 'Care': 'Gentle cleaning recommended', 'Warranty': '30 days return policy' }
 
     const customerReviews = [
         { id: 1, name: isHindi ? 'राहुल शर्मा' : 'Rahul Sharma', rating: 5, date: '2024-01-10', comment: isHindi ? 'बिल्कुल सुंदर! गुणवत्ता मेरी उम्मीदों से अधिक थी।' : 'Absolutely beautiful! The quality exceeded my expectations. Perfect for my home temple.', verified: true },
@@ -132,13 +78,12 @@ const ProductDetail = () => {
         { id: 3, name: isHindi ? 'अमित कुमार' : 'Amit Kumar', rating: 5, date: '2024-01-05', comment: isHindi ? 'उत्कृष्ट शिल्प कौशल और प्रामाणिक डिजाइन।' : 'Excellent craftsmanship and authentic design. Highly recommended!', verified: false }
     ];
 
-    const relatedProducts = religiousProducts.filter(p => p.id !== product.id).slice(0, 4);
 
     const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) addToCart(product);
+        for (let i = 0; i < quantity; i++) addToCart(products);
     };
 
-    const handleToggleWishlist = () => toggleWishlist(product);
+    const handleToggleWishlist = () => toggleWishlist(products);
 
     const handleImageScroll = (e) => {
         const scrollLeft = e.target.scrollLeft;
@@ -153,8 +98,6 @@ const ProductDetail = () => {
             imageScrollRef.current.scrollTo({ left: idx * imageScrollRef.current.offsetWidth, behavior: 'smooth' });
         }
     };
-
-    const productName = isHindi ? product.name : (product.nameEn || product.name);
 
     return (
         <div className="min-h-screen bg-gray-50 font-ibm">
@@ -175,7 +118,7 @@ const ProductDetail = () => {
                     <div className="flex gap-3 pointer-events-auto">
                         <button
                             onClick={handleToggleWishlist}
-                            className={`backdrop-blur-md p-2.5 rounded-full shadow-md border border-white/30 ${isInWishlist(product.id) ? 'bg-[#e14503] text-white' : 'bg-white/80 text-gray-800'}`}
+                            className={`backdrop-blur-md p-2.5 rounded-full shadow-md border border-white/30 ${isInWishlist(products?.id) ? 'bg-[#e14503] text-white' : 'bg-white/80 text-gray-800'}`}
                         >
                             <FaHeart size={16} />
                         </button>
@@ -223,7 +166,7 @@ const ProductDetail = () => {
                         <span className="text-xs font-bold text-[#e14503] bg-[#e14503]/10 px-3 py-1 rounded-full">
                             {products?.category.name}
                         </span>
-                        {product.inStock !== false && (
+                        {products?.inStock !== false && (
                             <span className="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
                                 {isHindi ? 'स्टॉक में' : 'In Stock'}
                             </span>
@@ -234,32 +177,32 @@ const ProductDetail = () => {
                     <h1 className="text-xl font-bold text-gray-900 mb-2 leading-tight">{product_name}</h1>
 
                     {/* Brand */}
-                    <p className="text-sm text-gray-500 mb-3">{product.brand}</p>
+                    <p className="text-sm text-gray-500 mb-3">{products?.brand|| "Devine Place"}</p>
 
                     {/* Rating */}
                     <div className="flex items-center gap-2 mb-4">
                         <div className="flex items-center gap-0.5">
                             {[...Array(5)].map((_, i) => (
-                                <FaStar key={i} className={`text-sm ${i < Math.floor(product.rating) ? 'text-yellow-500' : 'text-gray-300'}`} />
+                                <FaStar key={i} className={`text-sm ${i < Math.floor(products?.rating) ? 'text-yellow-500' : 'text-gray-300'}`} />
                             ))}
                         </div>
-                        <span className="text-sm font-semibold text-gray-900">{product.rating}</span>
-                        <span className="text-sm text-gray-500">({product.reviews} {isHindi ? 'समीक्षाएं' : 'reviews'})</span>
+                        <span className="text-sm font-semibold text-gray-900">{products?.rating}</span>
+                        <span className="text-sm text-gray-500">({products?.reviews} {isHindi ? 'समीक्षाएं' : 'reviews'})</span>
                     </div>
 
                     {/* Price */}
                     <div className="flex items-baseline gap-3 mb-4 pb-4 border-b border-gray-100">
-                        <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
-                        {product.originalPrice && (
+                        <span className="text-3xl font-bold text-gray-900">₹{products?.price}</span>
+                        {products?.mrp && (
                             <>
-                                <span className="text-lg text-gray-400 line-through">₹{product.originalPrice}</span>
+                                <span className="text-lg text-gray-400 line-through">₹{products?.mrp}</span>
                                 <span className="text-sm font-bold text-[#e14503]">{products?.discount_percent}% {isHindi ? 'बचत' : 'OFF'}</span>
                             </>
                         )}
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{product.description}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed mb-4">{products?.description}</p>
 
                     {/* Quantity Selector */}
                     <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
@@ -307,7 +250,7 @@ const ProductDetail = () => {
                         onClick={() => setExpandedAccordion(expandedAccordion === 'features' ? null : 'features')}
                     >
                         <ul className="space-y-3">
-                            {product.features.map((feature, index) => (
+                            {features.map((feature, index) => (
                                 <li key={index} className="flex items-start gap-3">
                                     <FaCheckCircle className="text-green-500 mt-0.5 flex-shrink-0" size={14} />
                                     <span className="text-gray-700">{feature}</span>
@@ -323,7 +266,7 @@ const ProductDetail = () => {
                         onClick={() => setExpandedAccordion(expandedAccordion === 'specs' ? null : 'specs')}
                     >
                         <div className="space-y-2">
-                            {Object.entries(product.specifications).map(([key, value]) => (
+                            {Object.entries(specifications).map(([key, value]) => (
                                 <div key={key} className="flex justify-between py-2 border-b border-gray-50 last:border-none">
                                     <span className="text-gray-500 font-medium">{key}</span>
                                     <span className="text-gray-900 font-semibold">{value}</span>
@@ -373,7 +316,7 @@ const ProductDetail = () => {
                 <div className="mt-6 px-4">
                     <h3 className="text-lg font-bold text-gray-900 mb-4">{isHindi ? 'संबंधित उत्पाद' : 'Related Products'}</h3>
                     <div className="flex overflow-x-auto gap-3 pb-4 -mx-4 px-4 scrollbar-hide snap-x">
-                        {relatedProducts.map((relProduct) => (
+                        {products?.length > 0 && products?.map((relProduct) => (
                             <Link
                                 key={relProduct.id}
                                 to={`/product/${relProduct.id}`}
@@ -404,9 +347,9 @@ const ProductDetail = () => {
                         <div className="flex flex-col min-w-0">
                             <span className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">Total</span>
                             <div className="flex items-baseline gap-1.5">
-                                <span className="text-xl font-bold text-gray-900 leading-none">₹{product.price * quantity}</span>
-                                {product.originalPrice && (
-                                    <span className="text-xs text-gray-400 line-through">₹{product.originalPrice * quantity}</span>
+                                <span className="text-xl font-bold text-gray-900 leading-none">₹{products?.price * quantity}</span>
+                                {products?.mrp && (
+                                    <span className="text-xs text-gray-400 line-through">₹{products?.mrp * quantity}</span>
                                 )}
                             </div>
                         </div>
@@ -447,18 +390,19 @@ const ProductDetail = () => {
                             <div className="bg-white rounded-2xl p-4 border border-gray-200 mb-4 overflow-hidden">
                                 <SafeImage
                                     src={gallery[selectedImage]}
+                                    type={"products/"}
                                     alt={product_name}
                                     className="w-full h-[500px] object-cover rounded-xl transition-all duration-300"
                                 />
                             </div>
                             <div className="grid grid-cols-4 gap-3">
-                                {gallery.map((image, index) => (
+                                {gallery?.map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
                                         className={`bg-white rounded-xl p-2 border-2 transition-all hover:shadow-md ${selectedImage === index ? 'border-[#e14503] shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
                                     >
-                                        <SafeImage src={image} alt="" className="w-full h-24 object-cover rounded-lg" />
+                                        <SafeImage src={image} type={"products/"} alt="" className="w-full h-24 object-cover rounded-lg" />
                                     </button>
                                 ))}
                             </div>
@@ -473,40 +417,40 @@ const ProductDetail = () => {
                                         <span className="text-sm font-semibold text-[#e14503] bg-[#e14503]/10 px-3 py-1 rounded-full">
                                             { products?.category?.name}
                                         </span>
-                                        {product.inStock !== false && (
+                                        {products?.inStock !== false && (
                                             <span className="text-sm font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">
                                                 {isHindi ? 'स्टॉक में' : 'In Stock'}
                                             </span>
                                         )}
                                     </div>
 
-                                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{productName}</h1>
-                                    <p className="text-gray-500 mb-4">{isHindi ? 'ब्रांड' : 'Brand'}: <span className="font-semibold text-gray-800">{product.brand}</span></p>
+                                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{product_name}</h1>
+                                    <p className="text-gray-500 mb-4">{isHindi ? 'ब्रांड' : 'Brand'}: <span className="font-semibold text-gray-800">{products?.brand || "Devine Brand"}</span></p>
 
                                     {/* Rating */}
                                     <div className="flex items-center gap-3 mb-6">
                                         <div className="flex items-center gap-1">
                                             {[...Array(5)].map((_, i) => (
-                                                <FaStar key={i} className={`${i < Math.floor(product.rating) ? 'text-yellow-500' : 'text-gray-300'}`} />
+                                                <FaStar key={i} className={`${i < Math.floor(products?.rating) ? 'text-yellow-500' : 'text-gray-300'}`} />
                                             ))}
                                         </div>
-                                        <span className="text-gray-900 font-semibold">{product.rating}</span>
-                                        <span className="text-gray-500">({product.reviews} {isHindi ? 'समीक्षाएं' : 'reviews'})</span>
+                                        <span className="text-gray-900 font-semibold">{products?.rating}</span>
+                                        <span className="text-gray-500">({products?.reviews} {isHindi ? 'समीक्षाएं' : 'reviews'})</span>
                                     </div>
 
                                     {/* Price */}
                                     <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
-                                        <span className="text-4xl font-bold text-gray-900">₹{product.price}</span>
-                                        {products?.price && (
+                                        <span className="text-4xl font-bold text-gray-900">₹{products?.price}</span>
+                                        {products?.mrp && (
                                             <>
-                                                <span className="text-2xl text-gray-400 line-through">₹{products?.price}</span>
+                                                <span className="text-2xl text-gray-400 line-through">₹{products?.mrp}</span>
                                                 <span className="text-lg font-semibold text-[#e14503]">{isHindi ? 'बचत' : 'Save'} {products?.discount_percent}%</span>
                                             </>
                                         )}
                                     </div>
 
                                     {/* Description */}
-                                    <p className="text-gray-600 mb-6 leading-relaxed">{product.description}</p>
+                                    <p className="text-gray-600 mb-6 leading-relaxed">{products?.description}</p>
 
                                     {/* Quantity */}
                                     <div className="mb-6">
@@ -539,7 +483,7 @@ const ProductDetail = () => {
                                         </button>
                                         <button
                                             onClick={handleToggleWishlist}
-                                            className={`w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all hover:-translate-y-0.5 transform ${isInWishlist(product.id) ? 'bg-[#e14503] border-[#e14503] text-white' : 'border-gray-300 text-gray-600 hover:border-[#e14503]'}`}
+                                            className={`w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all hover:-translate-y-0.5 transform ${isInWishlist(products?.id) ? 'bg-[#e14503] border-[#e14503] text-white' : 'border-gray-300 text-gray-600 hover:border-[#e14503]'}`}
                                         >
                                             <FaHeart className="text-xl" />
                                         </button>
@@ -594,7 +538,7 @@ const ProductDetail = () => {
                         <div className="p-8">
                             {activeTab === 'features' && (
                                 <div className="grid grid-cols-2 gap-4">
-                                    {product.features.map((feature, index) => (
+                                    {features.map((feature, index) => (
                                         <div key={index} className="flex items-start gap-3 bg-gray-50 p-4 rounded-xl">
                                             <FaCheckCircle className="text-green-500 mt-0.5 flex-shrink-0" />
                                             <span className="text-gray-700">{feature}</span>
@@ -604,7 +548,7 @@ const ProductDetail = () => {
                             )}
                             {activeTab === 'specs' && (
                                 <div className="max-w-2xl">
-                                    {Object.entries(product.specifications).map(([key, value]) => (
+                                    {Object.entries(specifications).map(([key, value]) => (
                                         <div key={key} className="flex justify-between py-4 border-b border-gray-100 last:border-none">
                                             <span className="text-gray-500 font-medium">{key}</span>
                                             <span className="text-gray-900 font-semibold">{value}</span>
@@ -651,7 +595,7 @@ const ProductDetail = () => {
                     <div>
                         <h3 className="text-2xl font-bold text-gray-900 mb-6">{isHindi ? 'संबंधित उत्पाद' : 'Related Products'}</h3>
                         <div className="grid grid-cols-4 gap-6">
-                            {relatedProducts.map((relProduct) => (
+                            {products?.length > 0 && products?.map((relProduct) => (
                                 <Link
                                     key={relProduct.id}
                                     to={`/product/${relProduct.id}`}

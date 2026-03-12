@@ -1,18 +1,20 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaTrash, FaMinus, FaPlus, FaShoppingBag, FaChevronLeft, FaTag, FaShieldAlt } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import PageHeader from '../../components/common/PageHeader';
+import { IMAGE_URL } from '../../utils/constants';
 
 const Cart = () => {
     const { cartItems, removeFromCart, updateQuantity, getCartTotal, getCartCount } = useCart();
-    const { isHindi } = useLanguage();
 
+    const { isHindi } = useLanguage();
+    
     const subtotal = getCartTotal();
     const shipping = 0;
     const tax = subtotal * 0.1;
     const total = subtotal + shipping + tax;
+
 
     if (cartItems.length === 0) {
         return (
@@ -65,14 +67,14 @@ const Cart = () => {
                     <div className="lg:col-span-2">
                         {/* Mobile: Card-style items */}
                         <div className="md:space-y-4">
-                            {cartItems.map((item) => (
+                            {cartItems?.map((item) => (
                                 <div key={item.id} className="bg-white md:rounded-2xl md:border md:border-gray-200 border-b border-gray-100 p-4 md:p-6">
                                     <div className="flex gap-3 md:gap-4">
                                         {/* Product Image */}
                                         <Link to={`/product/${item.id}`} className="shrink-0">
                                             <img
-                                                src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80'}
-                                                alt={isHindi ? item.name : (item.nameEn || item.name)}
+                                                src={IMAGE_URL + "products/" + item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80'}
+                                                alt={item?.product_name}
                                                 className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-xl"
                                             />
                                         </Link>
@@ -82,9 +84,9 @@ const Cart = () => {
                                             <div className="flex items-start justify-between gap-2">
                                                 <div className="min-w-0">
                                                     <h3 className="text-sm md:text-base font-bold text-gray-900 line-clamp-2 leading-tight">
-                                                        {isHindi ? item.name : (item.nameEn || item.name)}
+                                                        {item?.product_name}
                                                     </h3>
-                                                    <p className="text-xs text-gray-500 mt-0.5">{isHindi ? item.categoryHi : item.category}</p>
+                                                    <p className="text-xs text-gray-500 mt-0.5">{item?.category?.name}</p>
                                                 </div>
                                                 <button
                                                     onClick={() => removeFromCart(item.id)}
@@ -96,7 +98,7 @@ const Cart = () => {
 
                                             {/* Price + Quantity row */}
                                             <div className="flex items-center justify-between mt-3">
-                                                <p className="text-base md:text-lg font-bold text-gray-900">₹{item.price}</p>
+                                                <p className="text-base md:text-lg font-bold text-gray-900">₹{item?.price}</p>
                                                 <div className="flex items-center bg-gray-100 rounded-full">
                                                     <button
                                                         onClick={() => updateQuantity(item.id, item.quantity - 1)}

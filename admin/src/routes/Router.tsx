@@ -21,6 +21,7 @@ import Cab from 'src/views/tourManagment/cabs/Cabs';
 import Slider from 'src/views/home/slider/Slider';
 import Marquee from 'src/views/home/marquee/Marquee';
 import Blog from 'src/views/home/blogs/Blog';
+import Reviews from 'src/views/home/reviews/Reviews';
 
 /* Layouts */
 
@@ -62,6 +63,7 @@ const router = createBrowserRouter([
           { path: '/home-management/sliders', element: <Slider /> },
           { path: '/home-management/marquee', element: <Marquee /> },
           { path: '/home-management/blogs', element: <Blog /> },
+          { path: '/home-management/client-reviews', element: <Reviews /> },
 
           { path: '/user-profile', element: <Userprofile /> },
           { path: '/notifications', element: <SeeAllNotifications /> },

@@ -5,6 +5,8 @@ import { FaMapMarkerAlt, FaClock, FaCalendarAlt, FaStar, FaCheckCircle, FaTimesC
 import SafeImage from '../../components/common/SafeImage';
 import PackageCard from './components/PackageCard';
 import packages from '../../data/packages';
+import { useDispatch, useSelector } from 'react-redux';
+import { singleTour } from '../../features/home/HomeSlice';
 
 const PackageDetails = () => {
     const { id } = useParams();
@@ -12,6 +14,12 @@ const PackageDetails = () => {
     const { isHindi } = useLanguage();
     const [activeTab, setActiveTab] = useState('itinerary');
     const [openFaqIndex, setOpenFaqIndex] = useState(null);
+    const dispatch = useDispatch();
+    const tour = useSelector((state) => state.home.singletour) || [];
+
+    useEffect(() => {
+     dispatch(singleTour(id)).unwrap();
+    },[id])
 
     const toggleFaq = (index) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -121,8 +129,9 @@ const PackageDetails = () => {
             {/* Immersive Hero Section - Orange Gradient */}
             <div className="relative h-[60vh] min-h-[400px]">
                 <SafeImage
-                    src={packageData.image}
-                    alt={packageData.title}
+                    src={tour.banner_image}
+                    type={"packages/"}
+                    alt={tour.package_name}
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-orange-950 via-orange-900/40 to-transparent"></div>
@@ -139,17 +148,17 @@ const PackageDetails = () => {
                 <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-20">
                     <div className="container mx-auto">
                         <div className="flex items-center gap-2 text-orange-300 font-bold uppercase tracking-wider mb-2">
-                            <FaMapMarkerAlt /> {packageData.location}
+                            <FaMapMarkerAlt /> {tour.duration_days}
                         </div>
                         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
-                            {packageData.title}
+                            {tour.package_name}
                         </h1>
                         <div className="flex flex-wrap items-center gap-4 text-gray-200 font-medium">
                             <div className="flex items-center gap-2 bg-orange-900/40 backdrop-blur-md px-3 py-1.5 rounded-lg border border-orange-500/30">
-                                <FaClock className="text-orange-300" /> {packageData.duration}
+                                <FaClock className="text-orange-300" /> {tour.duration_days}
                             </div>
                             <div className="flex items-center gap-2 bg-orange-900/40 backdrop-blur-md px-3 py-1.5 rounded-lg border border-orange-500/30">
-                                <FaStar className="text-yellow-400" /> {packageData.rating} ({packageData.reviews} Reviews)
+                                <FaStar className="text-yellow-400" /> {tour.rating || 4.8} ({tour.reviews || 30} Reviews)
                             </div>
                         </div>
                     </div>
@@ -165,7 +174,7 @@ const PackageDetails = () => {
                         <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">{isHindi ? "यात्रा के बारे में" : "About the Tour"}</h2>
                             <p className="text-gray-600 leading-relaxed text-lg">
-                                {packageData.description}
+                                {tour.highlights}
                             </p>
                         </div>
 
@@ -199,7 +208,7 @@ const PackageDetails = () => {
 
                                                 <div className="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
                                                     <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
-                                                        <span className="text-[#e14503]">Day {day.day}:</span> {day.title}
+                                                        <span className="text-[#e14503]">Day {day.day}:</span> {day.package_name}
                                                     </h3>
                                                     <p className="text-gray-600">{day.desc}</p>
                                                 </div>
@@ -268,7 +277,7 @@ const PackageDetails = () => {
                         <div className="sticky top-24 bg-white rounded-2xl p-6 shadow-xl shadow-gray-200/50 border border-gray-100">
                             <div className="flex items-end gap-2 mb-6">
                                 <span className="text-gray-500 text-sm">Starting from</span>
-                                <span className="text-3xl font-bold text-gray-900">₹{packageData.price}</span>
+                                <span className="text-3xl font-bold text-gray-900">₹{tour.price}</span>
                                 <span className="text-gray-400 text-sm mb-1">/ person</span>
                             </div>
 

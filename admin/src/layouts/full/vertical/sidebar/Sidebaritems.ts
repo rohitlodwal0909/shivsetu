@@ -326,13 +326,16 @@ const SidebarContent: MenuItem[] = [
           icon: "ph:temple-thin",
           url: "/home-management/blogs",
         },
+         {
+          id: uniqueId(),
+          name: "Client Reviews",
+          icon: "ph:temple-thin",
+          url: "/home-management/client-reviews",
+        },
       ],
     },
   ],
 },
-
-
-
 ];
 
 export default SidebarContent;

@@ -22,12 +22,17 @@ const blogRoutes = require("../routes/homemanagment/blogRoutes");
 const homeRoutes = require("../routes/frontend/homeRoutes");
 const pujaRoute = require("../routes/frontend/pujaRoutes");
 const productRoute = require("../routes/frontend/productRoutes");
+const authRoute = require("../routes/frontend/authRoutes");
+const orderRoutes = require("../routes/frontend/orderRoutes");
+const UserMiddleware = require("../middleware/UserMiddleware");
 
 //  Frontend Routes
 
 router.use("/api/home", homeRoutes);
 router.use("/api/puja", pujaRoute);
 router.use("/api/shop", productRoute);
+router.use("/api/authentication", authRoute);
+router.use("/api/order", UserMiddleware, orderRoutes);
 
 // Admin Routes
 

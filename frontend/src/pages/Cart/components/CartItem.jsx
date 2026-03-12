@@ -7,6 +7,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
         <div className="flex gap-4 p-4 bg-slate-800 border border-slate-700 rounded-xl hover:border-indigo-500 transition-colors">
             <SafeImage
                 src={item.image}
+                type={"products/"}
                 alt={item.name}
                 className="w-24 h-24 object-cover rounded-lg"
             />

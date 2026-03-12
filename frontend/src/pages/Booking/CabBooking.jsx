@@ -1,112 +1,131 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaCar, FaMusic, FaSnowflake, FaChair } from 'react-icons/fa';
+import { FaCar, FaMusic, FaSnowflake, FaChair, FaRupeeSign } from 'react-icons/fa';
 import { useLanguage } from '../../context/LanguageContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCabs } from '../../features/home/HomeSlice';
+import { IMAGE_URL } from '../../utils/constants';
 
 const CabBooking = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
 
-    const cabs = [
-        {
-            id: 1,
-            name: 'Swift Dzire / Etios',
-            image: '/Images/Cabs/Dzire.webp',
-            seating: '4+1',
-            rate: 'Rs 12/KM',
-            features: ['AC Sedan', 'Clean Interiors', 'Professional Driver', 'City & Outstation'],
-        },
-        {
-            id: 2,
-            name: 'Toyota Innova Crysta',
-            image: '/Images/Cabs/Innova.webp',
-            seating: '6+1',
-            rate: 'Rs 18/KM',
-            features: ['AC SUV', 'Premium Comfort', 'Ample Legroom', 'Family Trips'],
-        },
-        {
-            id: 3,
-            name: 'Maruti Suzuki Ertiga',
-            image: '/Images/Cabs/Ertiga.webp',
-            seating: '6+1',
-            rate: 'Rs 15/KM',
-            features: ['AC SUV', 'Music System', 'Economical Group Travel', 'Verified Drivers'],
-        },
-        {
-            id: 4,
-            name: 'Tempo Traveller',
-            image: '/Images/Cabs/Tempo.webp',
-            seating: '12-17',
-            rate: 'Rs 25/KM',
-            features: ['Luxury Seating', 'Group Tours', 'Ideal for Pilgrimage', 'Pushback Seats'],
-        },
-    ];
+    const cabs = useSelector((state) => state.home.cabs) || [];
+
+
+    const dispatch = useDispatch();
+
+    // const cabs = [
+    //     { id: 1, name: 'Swift Dzire / Etios', image: '/Images/Cabs/Dzire.webp', seating: '4+1', price: 12 },
+    //     { id: 2, name: 'Toyota Innova Crysta', image: '/Images/Cabs/Innova.webp', seating: '6+1', price: 18 },
+    //     { id: 3, name: 'Maruti Suzuki Ertiga', image: '/Images/Cabs/Ertiga.webp', seating: '6+1', price: 15 },
+    //     { id: 4, name: 'Tempo Traveller', image: '/Images/Cabs/Tempo.webp', seating: '12-17', price: 25 },
+    // ];
 
     const handleBookNow = (cab) => {
         navigate(`/booking/cabs/book/${cab.id}`);
     };
+    
+    useEffect(() => {
+        dispatch(getCabs()).unwrap();
+    },[dispatch]);
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-white py-12 px-4">
+
             <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+
+                {/* Spiritual Header */}
+                <div className="text-center mb-16">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-orange-700 mb-4">
                         {t('booking.cab.title')}
                     </h1>
-                    <p className="text-xl text-gray-600">
-                        {t('booking.cab.subtitle')}
+                    <p className="text-base sm:text-lg text-amber-800 max-w-2xl mx-auto">
+                        Safe & comfortable rides for your divine journey
                     </p>
+                    <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-amber-500 mx-auto mt-6 rounded-full"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center justify-items-center">
+                {/* Cab Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
                     {cabs.map((cab) => (
-                        <div key={cab.id} className="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden hover:shadow-[0_20px_60px_rgba(0,0,0,0.15)] transition-shadow duration-300 w-full max-w-sm border border-gray-100 p-6 flex flex-col items-center">
+                        <div
+                            key={cab.id}
+                            className="group bg-white/90 backdrop-blur-sm rounded-3xl 
+                                       border border-orange-100 shadow-lg 
+                                       hover:shadow-2xl hover:-translate-y-1 
+                                       transition-all duration-300 overflow-hidden flex flex-col"
+                        >
 
-                            <div className="w-full h-48 mb-6 flex items-center justify-center relative">
-                                {/* Image Container with glow effect if needed */}
+                            {/* Image Section */}
+                            <div className="relative h-52 bg-gradient-to-br from-orange-50 to-amber-100 flex items-center justify-center">
                                 <img
-                                    src={cab.image}
+                                    src={IMAGE_URL + 'cabs/' + cab.icon}
                                     alt={cab.name}
-                                    className="w-full h-full object-contain drop-shadow-xl transform hover:scale-105 transition-transform duration-500"
+
+                                    className="h-full object-contain p-4 transform group-hover:scale-105 transition duration-500"
                                 />
-                            </div>
 
-                            <h2 className="text-2xl font-bold text-[#002147] mb-6 text-center">{cab.name}</h2>
-
-                            <div className="grid grid-cols-2 gap-y-4 gap-x-8 w-full mb-8">
-                                <div className="flex items-center gap-3 text-gray-700 font-medium">
-                                    <FaChair className="text-xl" />
-                                    <span>Seating {cab.seating}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-gray-700 font-medium whitespace-nowrap">
-                                    <FaCar className="text-xl" />
-                                    <span>{cab.rate}</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-gray-700 font-medium">
-                                    <FaSnowflake className="text-xl" />
-                                    <span>AC Car</span>
-                                </div>
-                                <div className="flex items-center gap-3 text-gray-700 font-medium">
-                                    <FaMusic className="text-xl" />
-                                    <span>Music Car</span>
+                                {/* Price Badge */}
+                                <div className="absolute top-4 right-4 bg-gradient-to-r from-orange-600 to-amber-500 
+                                                text-white px-4 py-1 rounded-full text-sm font-semibold 
+                                                flex items-center gap-1 shadow-md">
+                                    <FaRupeeSign className="text-xs" />
+                                    {cab.price_per_km}/KM
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => handleBookNow(cab)}
-                                className="w-full bg-[#001f3f] text-white py-3.5 px-6 rounded-full font-bold text-lg hover:bg-[#002b52] transition-colors duration-300 flex items-center justify-center gap-2 group"
-                            >
-                                Book Now
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </button>
+                            {/* Content */}
+                            <div className="p-6 flex flex-col flex-grow">
+
+                                <h2 className="text-xl font-bold text-orange-800 text-center mb-6">
+                                    {cab.name}
+                                </h2>
+
+                                {/* Features */}
+                                <div className="grid grid-cols-2 gap-4 text-sm text-amber-900 mb-8">
+
+                                    <div className="flex items-center gap-2">
+                                        <FaChair className="text-orange-500" />
+                                        <span>{cab.seating} Seats</span>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <FaCar className="text-orange-500" />
+                                        <span>Verified Driver</span>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <FaSnowflake className="text-orange-500" />
+                                        <span>{cab.ac_type == "Yes" ? "AC Available" : "No AC Available"}</span>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <FaMusic className="text-orange-500" />
+                                        <span>{cab.music_system == "Yes" ? "Music System" : "No Music System"} </span>
+                                    </div>
+
+                                </div>
+
+                                {/* Button */}
+                                <button
+                                    onClick={() => handleBookNow(cab)}
+                                    className="mt-auto w-full bg-gradient-to-r from-orange-600 to-amber-500 
+                                               text-white py-3 rounded-full font-semibold 
+                                               hover:from-orange-700 hover:to-amber-600 
+                                               transition duration-300 shadow-md"
+                                >
+                                    Book Divine Ride
+                                </button>
+
+                            </div>
                         </div>
                     ))}
+
                 </div>
+
             </div>
-
-
         </div>
     );
 };

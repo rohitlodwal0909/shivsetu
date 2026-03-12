@@ -11,6 +11,7 @@ import CabSlice from '../src/features/tourmanagment/CabSlice';
 import SliderSlice from '../src/features/homemanagment/SliderSlice';
 import MarqueeSlice from '../src/features/homemanagment/MarqueeSlice';
 import BlogSlice from '../src/features/homemanagment/BlogSlice';
+import ReviewSlice from '../src/features/homemanagment/ReviewSlice';
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     slider: SliderSlice,
     marquee: MarqueeSlice,
     blog: BlogSlice,
+    review: ReviewSlice,
   },
 });
 

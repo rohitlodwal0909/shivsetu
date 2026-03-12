@@ -18,7 +18,6 @@ const PujaBooking = () => {
      const pujas = pujaDetails?.pujas;
      
      const selectedPackage = React.useMemo(() => {
-
             return pujas?.packages?.find(
                 (data) => data.id === Number(pkgId)
             );
@@ -29,7 +28,6 @@ const PujaBooking = () => {
     useEffect(() => {
     dispatch(getPujaWithSlug(slug))
     },[dispatch,slug])
-
 
     const navigate = useNavigate();
     const { isHindi } = useLanguage();

@@ -16,19 +16,15 @@ const BookCabs = ({cabs}) => {
         navigate(`/booking/cabs/book/${cab.id}`);
     };
 
-
     return (
         <section className="py-10 lg:py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4">
                 {/* Header */}
-              
-
                  <div className="mb-8 lg:mb-16 flex items-start sm:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 leading-tight flex items-center gap-2">
                         Premium Fleet <span className="text-2xl sm:text-2xl md:text-3xl">🚖</span>
                     </h2>
-
                     <p className="text-xs sm:text-sm md:text-base text-gray-500 mt-1 font-medium">
                       Comfortable travel for your <span className="text-[#e14503]">Pilgrimage</span>
 
@@ -85,13 +81,13 @@ const BookCabs = ({cabs}) => {
 
                             <button
                                 onClick={() => handleBookNow(cab)}
-                                className="w-full bg-[#001f3f] text-white py-3.5 px-6 rounded-full font-bold text-lg hover:bg-[#002b52] transition-colors duration-300 flex items-center justify-center gap-2 group"
+                                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
                             >
                                 {t('booking.cab.bookNow')}
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
-                            </button>
+                            </button>      
                         </div>
                     ))}
                 </div>
