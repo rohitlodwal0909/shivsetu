@@ -15,15 +15,9 @@ const CreateReview: React.FC<CreateReviewProps> = ({ openModal, setOpenModal }) 
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!title.trim() || !description.trim()) {
-      setError('All fields are required');
-      return;
-    }
 
     const fd = new FormData();
     fd.append('title', title);
@@ -36,7 +30,6 @@ const CreateReview: React.FC<CreateReviewProps> = ({ openModal, setOpenModal }) 
       setOpenModal(false);
       setTitle('');
       setDescription('');
-      setError('');
     } catch (error: any) {
       toast.error(error?.message || 'Something went wrong');
     }
@@ -55,7 +48,6 @@ const CreateReview: React.FC<CreateReviewProps> = ({ openModal, setOpenModal }) 
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
-                setError('');
               }}
               placeholder="Enter reviews title"
             />
@@ -69,7 +61,6 @@ const CreateReview: React.FC<CreateReviewProps> = ({ openModal, setOpenModal }) 
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
-                setError('');
               }}
               placeholder="Enter review description"
             />

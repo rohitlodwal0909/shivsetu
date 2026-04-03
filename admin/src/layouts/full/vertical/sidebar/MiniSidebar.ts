@@ -26,6 +26,11 @@ const Miniicons: MiniiconsType[] = [
   icon: "ph:shopping-bag-thin",
   tooltip: "Product Management",
 },
+{
+  id: 4,
+  icon: "ph-house-thin",
+  tooltip: "Home Management",
+},
 
   
   // {

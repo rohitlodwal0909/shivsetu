@@ -37,8 +37,8 @@ const Home = () => {
 
             <DarshanSection tours={data?.tour}/>
             <BookCabs cabs={data?.cabs}/>
-            <ChadavaBooking />
-            <PanditBooking />
+            {/* <ChadavaBooking />
+            <PanditBooking /> */}
 
             <PujaSection pujas={data?.pujas}/>
             <KundliSection />

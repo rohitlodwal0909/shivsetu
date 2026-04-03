@@ -1,11 +1,13 @@
 // Application constants and configuration
+export const api = "https://shivsetu.com";
+// export const api = "http://localhost:5000/";
 
-export const API_BASE_URL = "http://localhost:5000/api";
-export const IMAGE_URL = "http://localhost:5000/uploads/";
+export const API_BASE_URL = `${api}api`;
+export const IMAGE_URL = `${api}uploads/`;
 
-export const apiUrl = "http://127.0.0.1:5000/api";
+export const apiUrl = `${api}api`;
 export const fakeUrl = "https://fake-json-api.mock.beeceptor.com/users";
-export const ImageUrl = "http://127.0.0.1:5000/";
+export const ImageUrl = `${api}`;
 
 export const ROUTES = {
   HOME: "/",

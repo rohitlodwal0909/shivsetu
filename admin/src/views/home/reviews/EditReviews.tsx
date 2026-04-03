@@ -16,14 +16,12 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [error, setError] = useState('');
 
   /* ---------- PREFILL EXISTING DATA ---------- */
   useEffect(() => {
     if (row && openModal) {
       setTitle(row.title || '');
       setDescription(row.description || '');
-      setError('');
     }
   }, [row, openModal]);
 
@@ -32,7 +30,6 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
     e.preventDefault();
 
     if (!title.trim() || !description.trim()) {
-      setError('Title and description are required');
       return;
     }
 
@@ -68,7 +65,6 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
-                setError('');
               }}
             />
           </div>
@@ -81,7 +77,6 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
-                setError('');
               }}
             />
           </div>
