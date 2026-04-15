@@ -6,9 +6,10 @@ import axiosInstance from 'src/constants/axiosInstance';
 
 export interface Review {
   id: number;
+  type: string;
   title: string;
   description: string;
-  image: string;
+  image?: string;
 }
 
 interface ReviewState {
@@ -19,7 +20,11 @@ interface ReviewState {
 
 interface UpdateReviewPayload {
   id: number | string;
-  data: FormData;
+  data: {
+    type: string;
+    title: string;
+    description: string;
+  };
 }
 
 /* ================= INITIAL STATE ================= */
@@ -32,21 +37,22 @@ const initialState: ReviewState = {
 
 /* ================= THUNKS ================= */
 
-// CREATE Review
-export const createReview = createAsyncThunk<Review, FormData, { rejectValue: string }>(
-  'review/create',
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.post('/review/create', data);
-      return response.data.data;
-    } catch (err) {
-      const error = err as AxiosError<any>;
-      return rejectWithValue(error.response?.data?.message || 'Review creation failed');
-    }
-  },
-);
+// ✅ CREATE
+export const createReview = createAsyncThunk<
+  Review,
+  { type: string; title: string; description: string },
+  { rejectValue: string }
+>('review/create', async (data, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.post('/review/create', data);
+    return response.data.data;
+  } catch (err) {
+    const error = err as AxiosError<any>;
+    return rejectWithValue(error.response?.data?.message || 'Review creation failed');
+  }
+});
 
-// GET Review
+// ✅ GET
 export const getReview = createAsyncThunk<Review[], void, { rejectValue: string }>(
   'review/find',
   async (_, { rejectWithValue }) => {
@@ -60,21 +66,22 @@ export const getReview = createAsyncThunk<Review[], void, { rejectValue: string 
   },
 );
 
-// DELETE BLOG
-export const deleteReview = createAsyncThunk<any, number | string, { rejectValue: string }>(
-  'review/delete',
-  async (id, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.delete(`/review/delete/${id}`);
-      return response.data;
-    } catch (err) {
-      const error = err as AxiosError<any>;
-      return rejectWithValue(error.response?.data?.message || 'review delete failed');
-    }
-  },
-);
+// ✅ DELETE
+export const deleteReview = createAsyncThunk<
+  number | string,
+  number | string,
+  { rejectValue: string }
+>('review/delete', async (id, { rejectWithValue }) => {
+  try {
+    await axiosInstance.delete(`/review/delete/${id}`);
+    return id;
+  } catch (err) {
+    const error = err as AxiosError<any>;
+    return rejectWithValue(error.response?.data?.message || 'Review delete failed');
+  }
+});
 
-// UPDATE BLOG
+// ✅ UPDATE
 export const updateReview = createAsyncThunk<Review, UpdateReviewPayload, { rejectValue: string }>(
   'review/update',
   async ({ id, data }, { rejectWithValue }) => {
@@ -83,7 +90,7 @@ export const updateReview = createAsyncThunk<Review, UpdateReviewPayload, { reje
       return response.data.data;
     } catch (err) {
       const error = err as AxiosError<any>;
-      return rejectWithValue(error.response?.data?.message || 'review update failed');
+      return rejectWithValue(error.response?.data?.message || 'Review update failed');
     }
   },
 );
@@ -94,27 +101,65 @@ const ReviewSlice = createSlice({
   name: 'review',
   initialState,
   reducers: {},
+
   extraReducers: (builder) => {
     builder
 
+      /* ========= CREATE ========= */
+      .addCase(createReview.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(createReview.fulfilled, (state, action: PayloadAction<Review>) => {
+        state.loading = false;
         state.reviews.unshift(action.payload);
       })
+      .addCase(createReview.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Create failed';
+      })
 
+      /* ========= GET ========= */
+      .addCase(getReview.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(getReview.fulfilled, (state, action: PayloadAction<Review[]>) => {
+        state.loading = false;
         state.reviews = action.payload;
       })
-
-      .addCase(deleteReview.fulfilled, (state, action) => {
-        const deletedId = action.meta.arg;
-        state.reviews = state.reviews.filter((item) => item.id !== deletedId);
+      .addCase(getReview.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Fetch failed';
       })
 
+      /* ========= DELETE ========= */
+      .addCase(deleteReview.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteReview.fulfilled, (state, action) => {
+        state.loading = false;
+        state.reviews = state.reviews.filter((item) => item.id !== action.payload);
+      })
+      .addCase(deleteReview.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Delete failed';
+      })
+
+      /* ========= UPDATE ========= */
+      .addCase(updateReview.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(updateReview.fulfilled, (state, action: PayloadAction<Review>) => {
+        state.loading = false;
+
         const index = state.reviews.findIndex((item) => item.id === action.payload.id);
+
         if (index !== -1) {
           state.reviews[index] = action.payload;
         }
+      })
+      .addCase(updateReview.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Update failed';
       });
   },
 });

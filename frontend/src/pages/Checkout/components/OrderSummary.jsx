@@ -13,6 +13,8 @@ const OrderSummary = ({ items, onPlaceOrder, isMobile = false }) => {
     const tax = subtotal * 0.1;
     const total = subtotal + shipping + tax;
 
+
+
     return (
         <div
             className={`bg-white ${
@@ -49,7 +51,7 @@ const OrderSummary = ({ items, onPlaceOrder, isMobile = false }) => {
                                     IMAGE_URL + "products/" + item.image ||
                                     'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=100&q=80'
                                 }
-                                alt={item.nameEn || item.name}
+                                alt={item.product_name}
                                 className="w-12 h-12 object-cover rounded-lg"
                             />
 
@@ -59,7 +61,7 @@ const OrderSummary = ({ items, onPlaceOrder, isMobile = false }) => {
                                         isMobile ? 'text-xs' : 'text-sm'
                                     }`}
                                 >
-                                    {item.nameEn || item.name}
+                                    {item.product_name}
                                 </span>
 
                                 <span className="text-[#e14503] text-xs block">

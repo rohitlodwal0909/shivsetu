@@ -4,7 +4,6 @@ import { useLanguage } from '../../context/LanguageContext';
 import PujaCard from './components/PujaCard';
 import MobilePujaCard from './components/MobilePujaCard';
 import { FaFilter, FaOm, FaPray, FaStar, FaCalendarAlt, FaFire } from 'react-icons/fa';
-import pujas from '../../data/pujas';
 import PageHeader from '../../components/common/PageHeader';
 import Pagination from '../../components/common/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +14,7 @@ const Puja = () => {
 
     const dispatch = useDispatch();
 
-    const  {pujas}  = useSelector((state) => state.puja);
+    const  { pujas }  = useSelector((state) => state.puja);
 
     const allpuja = pujas?.pujas || [];
     const category = pujas?.category || [];
@@ -26,6 +25,7 @@ const Puja = () => {
     }, [dispatch]);
 
     const navigate = useNavigate();
+
     const [activeFilter, setActiveFilter] = useState('All');
     const [priceSort, setPriceSort] = useState('default');
     const [currentPage, setCurrentPage] = useState(1);

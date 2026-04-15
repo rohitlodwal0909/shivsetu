@@ -13,8 +13,8 @@ import { useLocation } from 'react-router-dom';
 const Shop = () => {
     
 const location = useLocation();
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [priceRange, setPriceRange] = useState(5000);
+const [selectedCategory, setSelectedCategory] = useState('all');    
+const [priceRange, setPriceRange] = useState(5000);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -35,7 +35,6 @@ const location = useLocation();
     useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoryFromUrl = params.get('category');
-            console.log(categoryFromUrl)
 
 
     if (categoryFromUrl) {
@@ -44,19 +43,19 @@ const location = useLocation();
 }, [location.search]);
 
     // Dynamic Categories
-    const categories = [
-        { id: 'All', name: 'All' },
-        ...category.map((cat) => ({
-            id: cat.name,
-            name: cat.name,
-            slug: cat.slug,
-        }))
-    ];
+ const categories = [
+  { id: 'all', name: 'All', slug: 'all' },
+  ...category.map((cat) => ({
+    id: cat.slug,
+    name: cat.name,
+    slug: cat.slug,
+  }))
+];
 
     // Filter Logic
     const filteredProducts = products.filter((product) => {
         const categoryMatch =
-            selectedCategory === 'All' ||
+            selectedCategory == 'all' ||
             product.category?.slug === selectedCategory;
 
         const priceMatch = product.price <= priceRange;

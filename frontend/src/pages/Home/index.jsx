@@ -16,19 +16,26 @@ import KundliSection from './components/KundliSection';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getHomedata } from '../../features/home/HomeSlice';
+import Loader from '../../components/Loader/loader';
 
 const Home = () => {
 
     const dispatch = useDispatch();
-    const { data } = useSelector((state) => state.home);
+    const { data,loading } = useSelector((state) => state.home);
 
     useEffect(() => {
         dispatch(getHomedata());
     }, [dispatch]);
 
 
+     if (loading) {
+        return <Loader />;
+    }
+
+
     return (
         <div>
+            
             <Hero sliders={data?.sliders}/>
             <Panchang /> {/* Mobile: Card, Desktop: Grid (Hidden via CSS if needed, but per request keeping both) */}
             <PremiumCategories categories={data?.categories}/>
@@ -43,9 +50,9 @@ const Home = () => {
             <PujaSection pujas={data?.pujas}/>
             <KundliSection />
 
-            <ClientReviews />
+            <ClientReviews reviews={data?.reviews}/>
             <BlogSection blogs={data?.blogs}/>
-            <YouTubeReviews />
+            {/* <YouTubeReviews /> */}
 
         </div>
     );

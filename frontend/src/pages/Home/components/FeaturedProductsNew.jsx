@@ -14,6 +14,7 @@ const FeaturedProductsNew = ({ products = [] }) => {
         addToCart(product);
     };
 
+
     const handleToggleWishlist = (e, product) => {
         e.preventDefault();
         e.stopPropagation();
@@ -88,7 +89,7 @@ const FeaturedProductsNew = ({ products = [] }) => {
                                 <div className="absolute bottom-0 left-0 right-0 bg-white p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20">
                                     <div className="flex items-start justify-between mb-3">
                                         <span className="text-[#e14503] text-xs font-bold uppercase tracking-wider bg-orange-50 px-2 py-1 rounded">
-                                            {product.category || "category"}
+                                            {product?.category?.name || "category"}
                                         </span>
                                         <div className="flex items-center gap-1">
                                             <FaStar className="text-yellow-400 text-sm" />

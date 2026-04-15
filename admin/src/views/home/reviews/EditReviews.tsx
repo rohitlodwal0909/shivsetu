@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Label, TextInput, Textarea } from 'flowbite-react';
+import { Button, Modal, Label, TextInput, Textarea, Select } from 'flowbite-react';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from 'src/store';
@@ -15,33 +15,34 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
   const dispatch = useDispatch<AppDispatch>();
 
   const [title, setTitle] = useState('');
+  const [type, setType] = useState('');
   const [description, setDescription] = useState('');
 
-  /* ---------- PREFILL EXISTING DATA ---------- */
   useEffect(() => {
     if (row && openModal) {
       setTitle(row.title || '');
       setDescription(row.description || '');
+      setType(row.type || '');
     }
   }, [row, openModal]);
 
-  /* ---------- SUBMIT ---------- */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title.trim() || !description.trim()) {
+    if (!type || !title.trim() || !description.trim()) {
+      toast.error('All fields are required');
       return;
     }
-
-    const fd = new FormData();
-    fd.append('title', title);
-    fd.append('description', description);
 
     try {
       await dispatch(
         updateReview({
           id: row.id,
-          data: fd,
+          data: {
+            type,
+            title,
+            description,
+          },
         }),
       ).unwrap();
 
@@ -58,15 +59,22 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
 
       <Modal.Body>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Type */}
+          <div>
+            <Label value="Review Type" />
+            <Select value={type} onChange={(e) => setType(e.target.value)} required>
+              <option value="">Select Type</option>
+              <option value="shop">Shop</option>
+              <option value="puja">Puja</option>
+              <option value="tour">Tours</option>
+              <option value="cab">Cab</option>
+            </Select>
+          </div>
+
           {/* Title */}
           <div>
             <Label value="Review Title" />
-            <TextInput
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            />
+            <TextInput value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
 
           {/* Description */}
@@ -75,9 +83,8 @@ const EditReview: React.FC<EditReviewProps> = ({ openModal, setOpenModal, row })
             <Textarea
               rows={4}
               value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
+              onChange={(e) => setDescription(e.target.value)}
+              required
             />
           </div>
 

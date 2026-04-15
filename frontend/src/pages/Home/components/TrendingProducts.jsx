@@ -6,14 +6,25 @@ import { useLanguage } from '../../../context/LanguageContext';
 import { useCart } from '../../../context/CartContext';
 import { useWishlist } from '../../../context/WishlistContext';
 import SafeImage from '../../../components/common/SafeImage';
+import { useDispatch } from 'react-redux';
+import { getProduct } from '../../../features/shop/ProductSlice';
 
 const TrendingProducts = () => {
     const { isHindi } = useLanguage();
     const { addToCart } = useCart();
     const { isInWishlist, toggleWishlist } = useWishlist();
 
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.product.shop);
+    const category = data?.category || [];
+    const products = data?.products || [];
 
-    const products = religiousProducts.slice(8, 12);
+    useEffect(() => {
+        dispatch(getProduct());
+    }, [dispatch]);
+
+
+    // const products = religiousProducts.slice(8, 12);
 
     const handleAddToCart = (e, product) => {
         e.preventDefault();
@@ -50,11 +61,11 @@ const TrendingProducts = () => {
                                 <div className="absolute inset-0 overflow-hidden">
                                     <SafeImage
                                         src={product.image}
+                                        type={"shop"}
                                         alt={isHindi ? product.name : product.nameEn}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                     />
                                 </div>
-
 
                                 <div className="absolute top-4 left-4 bg-[#e14503] text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg z-30">
                                     TRENDING

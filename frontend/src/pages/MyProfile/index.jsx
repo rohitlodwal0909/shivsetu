@@ -17,7 +17,9 @@ import { getMyOrders } from '../../features/order/OrderSlice';
 
 const MyProfile = () => {
     const { isHindi, language, toggleLanguage } = useLanguage();
-    const { logout, user } = useAuth(); // Get logout and user
+    const { logout, user } = useAuth(); 
+
+
     const navigate = useNavigate(); // Import navigate
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditing, setIsEditing] = useState(false);

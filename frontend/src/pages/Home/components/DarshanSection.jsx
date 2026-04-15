@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import DarshanCard from '../../Darshan/components/DarshanCard';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -8,42 +7,7 @@ const DarshanSection = ({tours}) => {
     const navigate = useNavigate();
     const { isHindi } = useLanguage();
 
-    
-    const featuredTours = [
-        {
-            id: 1,
-            image: "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=800&auto=format&fit=crop",
-            title: isHindi ? "उज्जैन आध्यात्मिक यात्रा" : "Ujjain Spiritual Tour",
-            description: isHindi
-                ? "महाकाल दर्शन और उज्जैन के प्रमुख मंदिरों की पूर्ण यात्रा।"
-                : "Complete spiritual tour including Mahakal Darshan and major temples of Ujjain.",
-            location: "Ujjain, MP",
-            timing: "2 Days / 1 Night",
-            tag: "Popular"
-        },
-        {
-            id: 2,
-            image: "https://images.unsplash.com/photo-1605648916319-5e3dfd9dca10?q=80&w=800&auto=format&fit=crop",
-            title: isHindi ? "काशी विश्वनाथ टूर" : "Kashi Vishwanath Tour",
-            description: isHindi
-                ? "गंगा आरती और काशी दर्शन का दिव्य अनुभव।"
-                : "Experience divine Ganga Aarti and sacred Kashi temples.",
-            location: "Varanasi, UP",
-            timing: "3 Days / 2 Nights",
-            tag: "Premium"
-        },
-        {
-            id: 3,
-            image: "https://images.unsplash.com/photo-1622885989050-2b6e0d7e0f16?q=80&w=800&auto=format&fit=crop",
-            title: isHindi ? "अयोध्या राम मंदिर यात्रा" : "Ayodhya Ram Mandir Tour",
-            description: isHindi
-                ? "श्री राम जन्मभूमि और अयोध्या के पवित्र स्थलों का दर्शन।"
-                : "Visit Shri Ram Janmabhoomi and sacred places of Ayodhya.",
-            location: "Ayodhya, UP",
-            timing: "2 Days / 1 Night",
-            tag: "Trending"
-        }
-    ];
+
 
     return (
         <section className="py-12 bg-gray-50">
@@ -64,7 +28,7 @@ const DarshanSection = ({tours}) => {
                     </div>
 
                     <button
-                        onClick={() => navigate('/darshan')}
+                        onClick={() => navigate('/packages')}
                         className="group inline-flex items-center gap-2 text-[#e14503] font-semibold"
                     >
                         <span className="hidden sm:inline">
@@ -83,12 +47,11 @@ const DarshanSection = ({tours}) => {
                         <div key={tour.id} className="min-w-[85%] snap-center sm:min-w-0">
                             <DarshanCard
                                 {...tour}
-                                onClick={() => navigate(`/booking/tour/book/${tour.id}`)}
+                                onClick={() => navigate(`/packages/${tour.id}`)}
                             />
                         </div>
                     ))}
                 </div>
-
             </div>
         </section>
     );

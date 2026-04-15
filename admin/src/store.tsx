@@ -12,11 +12,13 @@ import SliderSlice from '../src/features/homemanagment/SliderSlice';
 import MarqueeSlice from '../src/features/homemanagment/MarqueeSlice';
 import BlogSlice from '../src/features/homemanagment/BlogSlice';
 import ReviewSlice from '../src/features/homemanagment/ReviewSlice';
+import OrderSlice from '../src/features/productmanagment/OrderSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     location: locationSlice,
+    orders: OrderSlice,
     package: PackageSlice,
     category: CategorySlice,
     product: ProductSlice,

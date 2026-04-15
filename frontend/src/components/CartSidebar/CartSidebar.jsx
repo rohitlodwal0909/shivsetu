@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaTimes, FaTrash, FaMinus, FaPlus, FaShoppingBag } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
+import SafeImage from '../common/SafeImage';
 
 const CartSidebar = ({ isOpen, onClose }) => {
     const { cartItems, removeFromCart, updateQuantity, getCartTotal, getCartCount } = useCart();
@@ -65,11 +66,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
                             {cartItems.map((item) => (
                                 <div key={item.id} className="bg-gray-50 rounded-xl p-3 flex gap-3">
                                     {/* Image */}
-                                    <img
-                                        src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=100&q=80'}
-                                        alt={isHindi ? item.name : (item.nameEn || item.name)}
+                                    
+                                    <SafeImage
+                                    src={item.image}
+                                    type={"products/"}
+                                    alt={item.name}
                                         className="w-20 h-20 object-cover rounded-lg"
-                                    />
+                                       />
 
                                     {/* Details */}
                                     <div className="flex-1">

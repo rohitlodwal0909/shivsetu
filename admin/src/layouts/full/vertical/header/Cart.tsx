@@ -1,9 +1,8 @@
-
-import { useContext } from "react";
-import { Icon } from "@iconify/react";
-import { Drawer } from "flowbite-react";
-import { useState } from "react";
-import { CustomizerContext } from "src/context/CustomizerContext";
+import { useContext } from 'react';
+import { Icon } from '@iconify/react';
+import { Drawer } from 'flowbite-react';
+import { useState } from 'react';
+import { CustomizerContext } from 'src/context/CustomizerContext';
 
 export const Cart = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,12 +23,16 @@ export const Cart = () => {
           </span>
         </div>
       </div>
-      <Drawer open={isOpen} onClose={handleClose} position={`${activeDir === "rtl" ? 'left' : 'right'}`} className="dark:bg-darkgray max-w-[350px] w-full">
-
+      <Drawer
+        open={isOpen}
+        onClose={handleClose}
+        position={`${activeDir === 'rtl' ? 'left' : 'right'}`}
+        className="dark:bg-darkgray max-w-[350px] w-full"
+      >
         <div className="border-ld  border-b">
           <div className="flex justify-between items-center p-4">
             <h5 className="text-xl">Shopping Cart</h5>
-            <Drawer.Header title="" titleIcon={() => <></>} />
+            <Drawer.Header title="Product" titleIcon={() => <></>} />
           </div>
         </div>
       </Drawer>

@@ -19,12 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
 
-      items: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-        comment: "JSON string of ordered items"
-      },
-
       shipping_address: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -58,6 +52,17 @@ module.exports = (sequelize, DataTypes) => {
       paranoid: true // soft delete
     }
   );
+
+  Order.associate = (models) => {
+    Order.hasMany(models.OrderItem, {
+      foreignKey: "order_id",
+      as: "order_items"
+    });
+    Order.belongsTo(models.User, {
+      foreignKey: "user_id",
+      as: "user"
+    });
+  };
 
   return Order;
 };

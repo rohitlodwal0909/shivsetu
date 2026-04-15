@@ -15,6 +15,8 @@ const PackageDetails = () => {
     const [activeTab, setActiveTab] = useState('itinerary');
     const [openFaqIndex, setOpenFaqIndex] = useState(null);
     const dispatch = useDispatch();
+
+
     const tour = useSelector((state) => state.home.singletour) || [];
 
     useEffect(() => {
@@ -29,9 +31,9 @@ const PackageDetails = () => {
     // Find Package Data
     const pkg = packages.find(p => p.id === parseInt(id));
 
-    if (!pkg) {
-        return <div className="min-h-screen flex items-center justify-center">Package not found</div>;
-    }
+    // if (!pkg) {
+    //     return <div className="min-h-screen flex items-center justify-center">Package not found</div>;
+    // }
 
     // Merged Data
     const packageData = {
@@ -86,48 +88,50 @@ const PackageDetails = () => {
         ]
     };
 
-    const relatedPackages = [
-        {
-            id: 2,
-            image: "https://images.unsplash.com/photo-1621847324329-37398e0a473a?q=80&w=800&auto=format&fit=crop",
-            title: isHindi ? "उज्जैन-ओंकारेश्वर ज्योतिर्लिंग यात्रा" : "Ujjain-Omkareshwar Jyotirlinga Tour",
-            location: "Ujjain & Omkareshwar",
-            duration: "3 Days / 2 Nights",
-            price: 8499,
-            rating: 4.9,
-            reviews: 89
-        },
-        {
-            id: 3,
-            image: "https://images.unsplash.com/photo-1566830646678-0b63c224213d?q=80&w=1200",
-            title: isHindi ? "संपूर्ण उज्जैन दर्शन" : "Complete Ujjain Sightseeing",
-            location: "Ujjain",
-            duration: "1 Day",
-            price: 2499,
-            rating: 4.7,
-            reviews: 210
-        },
-        {
-            id: 5,
-            image: "https://images.unsplash.com/photo-1598890777032-bde66e447735?q=80&w=1200",
-            title: isHindi ? "शिप्रा आरती और नाव विहार" : "Shipra Aarti & Boat Ride Experience",
-            location: "Ram Ghat, Ujjain",
-            duration: "4 Hours",
-            price: 999,
-            rating: 4.9,
-            reviews: 312
-        }
-    ];
+    // const relatedPackages = [
+    //     {
+    //         id: 2,
+    //         image: "https://images.unsplash.com/photo-1621847324329-37398e0a473a?q=80&w=800&auto=format&fit=crop",
+    //         title: isHindi ? "उज्जैन-ओंकारेश्वर ज्योतिर्लिंग यात्रा" : "Ujjain-Omkareshwar Jyotirlinga Tour",
+    //         location: "Ujjain & Omkareshwar",
+    //         duration: "3 Days / 2 Nights",
+    //         price: 8499,
+    //         rating: 4.9,
+    //         reviews: 89
+    //     },
+    //     {
+    //         id: 3,
+    //         image: "https://images.unsplash.com/photo-1566830646678-0b63c224213d?q=80&w=1200",
+    //         title: isHindi ? "संपूर्ण उज्जैन दर्शन" : "Complete Ujjain Sightseeing",
+    //         location: "Ujjain",
+    //         duration: "1 Day",
+    //         price: 2499,
+    //         rating: 4.7,
+    //         reviews: 210
+    //     },
+    //     {
+    //         id: 5,
+    //         image: "https://images.unsplash.com/photo-1598890777032-bde66e447735?q=80&w=1200",
+    //         title: isHindi ? "शिप्रा आरती और नाव विहार" : "Shipra Aarti & Boat Ride Experience",
+    //         location: "Ram Ghat, Ujjain",
+    //         duration: "4 Hours",
+    //         price: 999,
+    //         rating: 4.9,
+    //         reviews: 312
+    //     }
+    // ];
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [id]);
+
 
     return (
 
         <div className="min-h-screen bg-gray-50 md:pb-12 font-ibm">
             {/* Immersive Hero Section - Orange Gradient */}
             <div className="relative h-[60vh] min-h-[400px]">
+
                 <SafeImage
                     src={tour.banner_image}
                     type={"packages/"}
@@ -148,7 +152,7 @@ const PackageDetails = () => {
                 <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-20">
                     <div className="container mx-auto">
                         <div className="flex items-center gap-2 text-orange-300 font-bold uppercase tracking-wider mb-2">
-                            <FaMapMarkerAlt /> {tour.duration_days}
+                            <FaMapMarkerAlt /> {tour?.cities?.city}
                         </div>
                         <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
                             {tour.package_name}
@@ -306,7 +310,7 @@ const PackageDetails = () => {
             <div className="fixed bottom-[60px] left-0 w-full z-50 bg-white border-t border-gray-100 p-4 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] md:hidden flex items-center justify-between">
                 <div className="flex flex-col">
                     <span className="text-xs text-gray-500">Starting from</span>
-                    <span className="text-xl font-bold text-gray-900">₹{packageData.price}</span>
+                    <span className="text-xl font-bold text-gray-900">₹{tour.price}</span>
                 </div>
                 <div className="flex gap-3">
                     <button className="bg-[#25D366] text-white p-3 rounded-full shadow-lg">
@@ -319,7 +323,7 @@ const PackageDetails = () => {
             </div>
 
             {/* Related Tours Section */}
-            <div className="container mx-auto px-4 py-16 border-t border-gray-200 mt-16 md:mb-0 mb-16">
+            {/* <div className="container mx-auto px-4 py-16 border-t border-gray-200 mt-16 md:mb-0 mb-16">
                 <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
                     {isHindi ? "संबंधित यात्रा पैकेज" : "Similar Tour Packages"}
                 </h2>
@@ -330,7 +334,7 @@ const PackageDetails = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
         </div>
 
     );

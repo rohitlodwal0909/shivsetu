@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { FaMapMarkerAlt, FaCalendarAlt, FaClock, FaArrowRight } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaCalendarAlt, FaArrowRight } from 'react-icons/fa';
 import SafeImage from '../../../components/common/SafeImage';
+import { formatDate } from '../../../components/datetimer/date';
 
-const PujaCard = ({ id, slug, image, 	puja_name, description, location, date, price,puja_category }) => {
+const PujaCard = ({  slug, image, 	puja_name, description, location, date, price,puja_category }) => {
     const navigate = useNavigate();
-
 
     return (
         <div
@@ -46,7 +46,7 @@ const PujaCard = ({ id, slug, image, 	puja_name, description, location, date, pr
                 <div className="flex items-baseline justify-between mb-4 border-b border-gray-100 pb-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                         <FaCalendarAlt className="text-orange-500" />
-                        <span className="font-medium">{date}</span>
+                        <span className="font-medium">{formatDate(date)}</span>
                     </div>
                     <div className="text-2xl font-bold text-gray-900">
                         ₹{price}

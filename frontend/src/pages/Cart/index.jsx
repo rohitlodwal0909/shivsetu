@@ -1,12 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTrash, FaMinus, FaPlus, FaShoppingBag, FaChevronLeft, FaTag, FaShieldAlt } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import PageHeader from '../../components/common/PageHeader';
 import { IMAGE_URL } from '../../utils/constants';
+import { useAuth } from '../../context/AuthContext';
 
 const Cart = () => {
     const { cartItems, removeFromCart, updateQuantity, getCartTotal, getCartCount } = useCart();
+
+    const { user } = useAuth(); 
+
+    
+    const navigate = useNavigate();
 
     const { isHindi } = useLanguage();
     
@@ -15,6 +21,14 @@ const Cart = () => {
     const tax = subtotal * 0.1;
     const total = subtotal + shipping + tax;
 
+    const handleCheckout = () => {
+        if(user){
+        navigate("/checkout");
+        }else{
+        navigate("/login");
+
+        }
+    }
 
     if (cartItems.length === 0) {
         return (
@@ -152,12 +166,13 @@ const Cart = () => {
                                     <span className="text-2xl font-bold text-[#e14503]">₹{total.toFixed(2)}</span>
                                 </div>
                             </div>
-                            <Link
-                                to="/checkout"
-                                className="block w-full bg-[#e14503] hover:bg-[#c23a02] text-white py-3 rounded-xl font-bold text-center transition-colors mb-3"
-                            >
-                                {isHindi ? 'चेकआउट के लिए आगे बढ़ें' : 'Proceed to Checkout'}
-                            </Link>
+                          
+                            <button
+  onClick={handleCheckout}
+  className="block w-full bg-[#e14503] hover:bg-[#c23a02] text-white py-3 rounded-xl font-bold text-center transition-colors mb-3"
+>
+  {isHindi ? 'चेकआउट के लिए आगे बढ़ें' : 'Proceed to Checkout'}
+</button>
                             <Link
                                 to="/shop"
                                 className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-xl font-semibold text-center transition-colors"
@@ -181,12 +196,12 @@ const Cart = () => {
                                 <span className="text-[10px] text-green-600 font-medium">{isHindi ? 'मुफ़्त डिलीवरी' : 'Free Delivery'}</span>
                             </div>
                         </div>
-                        <Link
-                            to="/checkout"
+                        <button
+                            onClick={handleCheckout}
                             className="bg-[#e14503] hover:bg-[#c23a02] text-white px-8 py-3 rounded-xl font-bold text-sm transition-colors flex items-center gap-2"
                         >
                             {isHindi ? 'चेकआउट' : 'Checkout'}
-                        </Link>
+                        </button>
                     </div>
                     {/* Trust badge */}
                     <div className="flex items-center justify-center gap-1.5 pb-1">

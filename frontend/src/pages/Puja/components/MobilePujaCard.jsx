@@ -1,7 +1,7 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaCalendarAlt, FaStar, FaChevronRight } from 'react-icons/fa';
 import SafeImage from '../../../components/common/SafeImage';
+import { formatDate } from '../../../components/datetimer/date';
 
 const MobilePujaCard = ({ id, image, title, location, date, price, tag, rating, slots }) => {
     const navigate = useNavigate();
@@ -12,7 +12,12 @@ const MobilePujaCard = ({ id, image, title, location, date, price, tag, rating, 
             className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6 active:scale-[0.98] transition-transform"
         >
             <div className="relative h-56 w-full">
-                <SafeImage src={image} alt={title} className="w-full h-full object-cover" />
+                <SafeImage src={image}
+                type="pujas/"
+                 alt={title}
+                 className="w-full h-full object-cover" />
+
+                
 
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -28,7 +33,7 @@ const MobilePujaCard = ({ id, image, title, location, date, price, tag, rating, 
 
                 {/* Rating Badge */}
                 <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-                    <FaStar className="text-yellow-400" /> {rating}
+                    <FaStar className="text-yellow-400" /> {rating || 4.8}
                 </div>
 
                 {/* Bottom Content Overlay */}
@@ -45,7 +50,7 @@ const MobilePujaCard = ({ id, image, title, location, date, price, tag, rating, 
             <div className="p-4 flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-2 text-xs text-gray-500 mb-1">
-                        <FaCalendarAlt className="text-orange-500" /> {date}
+                        <FaCalendarAlt className="text-orange-500" /> {formatDate(date)}
                     </div>
                     <div className="flex items-baseline gap-1">
                         <span className="text-xs text-gray-400">From</span>

@@ -1,66 +1,52 @@
 import React, { useState } from 'react';
-import { FaStar, FaQuoteLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaStar, FaQuoteLeft } from 'react-icons/fa';
 import SafeImage from '../../../components/common/SafeImage';
+import { GiTempleGate, GiPrayerBeads, GiMeditation, GiLotus } from 'react-icons/gi';
+import { FaCar } from 'react-icons/fa';
 
-const ClientReviews = () => {
+const timeAgo = (dateString) => {
+  const now = new Date();
+  const past = new Date(dateString);
+
+  const seconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1,
+  };
+
+  for (const key in intervals) {
+    const value = Math.floor(seconds / intervals[key]);
+    if (value >= 1) {
+      return `${value} ${key}${value > 1 ? 's' : ''} ago`;
+    }
+  }
+
+  return 'just now';
+};
+
+const getTypeIcon = (type) => {
+  switch (type) {
+    case 'shop':
+      return <GiTempleGate className="text-orange-500 text-xl" />; 
+    case 'puja':
+      return <GiPrayerBeads className="text-yellow-500 text-xl" />; 
+    case 'tour':
+      return <GiMeditation className="text-purple-500 text-xl" />; 
+    case 'cab':
+      return <FaCar className="text-green-500 text-xl" />; 
+    default:
+      return <GiLotus className="text-pink-500 text-xl" />; // 🌸 fallback lotus
+  }
+};
+
+const ClientReviews = ({reviews = []}) => {
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    const reviews = [
-        {
-            id: 1,
-            name: "Rajesh Kumar",
-            role: "Business Owner",
-            image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-            rating: 5,
-            review: "Absolutely amazing service! The quality of products exceeded my expectations. Fast delivery and excellent customer support. Highly recommended!",
-            date: "2 days ago"
-        },
-        {
-            id: 2,
-            name: "Priya Sharma",
-            role: "Fashion Designer",
-            image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-            rating: 5,
-            review: "The best online shopping experience I've had. Products are genuine and prices are reasonable. The spiritual services are also top-notch.",
-            date: "1 week ago"
-        },
-        {
-            id: 3,
-            name: "Amit Patel",
-            role: "Software Engineer",
-            image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-            rating: 4,
-            review: "Great collection of products and services. The cab booking for temple visits was very convenient. Will definitely order again!",
-            date: "2 weeks ago"
-        },
-        {
-            id: 4,
-            name: "Sneha Gupta",
-            role: "Teacher",
-            image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80",
-            rating: 5,
-            review: "Excellent platform for both shopping and spiritual services. The chadava booking feature is unique and very helpful. Loved it!",
-            date: "3 weeks ago"
-        },
-        {
-            id: 5,
-            name: "Vikram Singh",
-            role: "Entrepreneur",
-            image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
-            rating: 5,
-            review: "Outstanding quality and service. The pandit booking service made organizing my puja so easy. Highly professional team!",
-            date: "1 month ago"
-        },
-        {
-            id: 6,
-            name: "Anita Desai",
-            role: "Homemaker",
-            image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
-            rating: 4,
-            review: "Very satisfied with my purchase. The products are exactly as described. Customer service is responsive and helpful.",
-            date: "1 month ago"
-        }
-    ];
 
     const itemsPerPage = 2;
     const totalSlides = Math.ceil(reviews.length / itemsPerPage);
@@ -94,7 +80,7 @@ const ClientReviews = () => {
 
                 {/* Mobile View - Horizontal Scroll */}
                 <div className="flex md:hidden overflow-x-auto pb-4 gap-4 scrollbar-hide snap-x mb-8">
-                    {reviews.map((review) => (
+                    {reviews?.map((review) => (
                         <div
                             key={review.id}
                             className="min-w-[85%] snap-center bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#e14503] hover:shadow-xl transition-all duration-300"
@@ -105,13 +91,13 @@ const ClientReviews = () => {
                                     {[...Array(5)].map((_, i) => (
                                         <FaStar
                                             key={i}
-                                            className={`text-lg ${i < review.rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                            className={`text-lg ${i < 4 ? 'text-yellow-500' : 'text-gray-300'}`}
                                         />
                                     ))}
                                 </div>
                             </div>
                             <div className="p-6">
-                                <p className="text-gray-700 mb-6 leading-relaxed text-base">"{review.review}"</p>
+                                <p className="text-gray-700 mb-6 leading-relaxed text-base">"{review.description}"</p>
                                 <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
                                     <SafeImage
                                         src={review.image}
@@ -120,11 +106,12 @@ const ClientReviews = () => {
                                         fallbackSrc="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop"
                                     />
                                     <div className="flex-1">
-                                        <h4 className="text-gray-900 font-bold">{review.name}</h4>
-                                        <p className="text-gray-600 text-sm">{review.role}</p>
+                                        <h4 className="text-gray-900 font-bold">{review.title}</h4>
+                                        {/* <p className="text-gray-600 text-sm">{review.role}</p> */}
                                     </div>
-                                    <span className="text-gray-500 text-sm">{review.date}</span>
-                                </div>
+<span className="text-gray-500 text-sm">
+  {timeAgo(review.created_at)}
+</span>                                </div>
                             </div>
                         </div>
                     ))}
@@ -143,26 +130,25 @@ const ClientReviews = () => {
                                     {[...Array(5)].map((_, i) => (
                                         <FaStar
                                             key={i}
-                                            className={`text-lg ${i < review.rating ? 'text-yellow-500' : 'text-gray-300'}`}
+                                            className={`text-lg ${i < 4 ? 'text-yellow-500' : 'text-gray-300'}`}
                                         />
                                     ))}
                                 </div>
                             </div>
                             <div className="p-6">
-                                <p className="text-gray-700 mb-6 leading-relaxed text-base">"{review.review}"</p>
+                                <p className="text-gray-700 mb-6 leading-relaxed text-base">"{review.description}"</p>
                                 <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                                    <SafeImage
-                                        src={review.image}
-                                        alt={review.name}
-                                        className="w-12 h-12 rounded-full object-cover"
-                                        fallbackSrc="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop"
-                                    />
+                                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+  {getTypeIcon(review.type)}
+</div>
                                     <div className="flex-1">
-                                        <h4 className="text-gray-900 font-bold">{review.name}</h4>
-                                        <p className="text-gray-600 text-sm">{review.role}</p>
+                                        <h4 className="text-gray-900 font-bold">{review.title}</h4>
+                                        {/* <p className="text-gray-600 text-sm">{review.type}</p> */}
                                     </div>
-                                    <span className="text-gray-500 text-sm">{review.date}</span>
-                                </div>
+                                        <span className="text-gray-500 text-sm">
+                                        {timeAgo(review.created_at)}
+                                        </span>
+                                        </div>
                             </div>
                         </div>
                     ))}

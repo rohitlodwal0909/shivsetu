@@ -16,7 +16,7 @@ const DarshanCard = ({
 
     return (
         <div
-            onClick={() => navigate(`/booking/tour/${id}`)}
+            onClick={() => navigate(`/packages/${id}`)}
             className="group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 cursor-pointer flex flex-col h-full hover:-translate-y-2"
         >
 
@@ -91,7 +91,7 @@ const DarshanCard = ({
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
-                        navigate(`/booking/tour/${id}`);
+                        navigate(`/packages/${id}`);
                     }}
                     className="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2"
                 >

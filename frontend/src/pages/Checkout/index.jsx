@@ -108,7 +108,7 @@ const handlePlaceOrder = async () => {
         order_number: orderNumber,
         user_id: user?.id,
         items: cartItems,
-       shipping_address: {
+        shipping_address: {
         address: formData.address,
         city: formData.city,
         state: formData.state,

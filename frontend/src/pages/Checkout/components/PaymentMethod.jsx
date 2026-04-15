@@ -6,10 +6,10 @@ const PaymentMethod = ({ selectedMethod, onMethodChange, isMobile = false }) => 
     const { isHindi } = useLanguage();
 
     const paymentMethods = [
-        { id: 'card', label: isHindi ? 'क्रेडिट/डेबिट कार्ड' : 'Credit/Debit Card', icon: FaCreditCard, color: 'text-blue-500' },
-        { id: 'upi', label: isHindi ? 'यूपीआई' : 'UPI', icon: FaMobileAlt, color: 'text-purple-500' },
+        // { id: 'card', label: isHindi ? 'क्रेडिट/डेबिट कार्ड' : 'Credit/Debit Card', icon: FaCreditCard, color: 'text-blue-500' },
+        // { id: 'upi', label: isHindi ? 'यूपीआई' : 'UPI', icon: FaMobileAlt, color: 'text-purple-500' },
         { id: 'cod', label: isHindi ? 'कैश ऑन डिलीवरी' : 'Cash on Delivery', icon: FaMoneyBillWave, color: 'text-green-500' },
-        { id: 'paypal', label: isHindi ? 'पेपाल' : 'PayPal', icon: FaPaypal, color: 'text-blue-700' },
+        // { id: 'paypal', label: isHindi ? 'पेपाल' : 'PayPal', icon: FaPaypal, color: 'text-blue-700' },
     ];
 
     return (

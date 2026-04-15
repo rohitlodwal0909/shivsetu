@@ -4,6 +4,7 @@ const router = express.Router();
 const ProductController = require("../../controllers/frontend/ProductController");
 
 router.get("/get-shop", ProductController.getProducts);
+router.get("/get-category", ProductController.getCategory);
 router.get("/product/:slug", ProductController.getProductWithSlug);
 
 module.exports = router;

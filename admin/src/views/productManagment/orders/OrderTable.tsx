@@ -7,133 +7,171 @@ import {
   useReactTable,
   createColumnHelper,
 } from '@tanstack/react-table';
-import { Button, Tooltip } from 'flowbite-react';
 import PaginationComponent from 'src/utils/PaginationComponent';
 import { useEffect, useMemo, useState } from 'react';
 import TableComponent from 'src/utils/TableComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from 'src/store';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import ComonDeletemodal from 'src/utils/deletemodal/ComonDeletemodal';
-import { toast } from 'react-toastify';
 
-import { getCategory } from 'src/features/productmanagment/CategorySlice';
-import { deleteProduct, getProduct } from 'src/features/productmanagment/ProductSlice';
+import { getOrder } from 'src/features/productmanagment/OrderSlice';
 
 export interface PaginationTableType {
   id: number;
-  category: {
-    id: number;
+  order_number: string;
+  order_items: any[];
+  payment_method: string;
+  total_amount: number;
+  order_status: string;
+  payment_status: string;
+  shipping_address: any;
+  user: {
     name: string;
+    email: string;
   };
-  product_name: string;
-  stock_quantity: string;
-  price: string;
-  image: string;
-  status: string;
 }
 
 const columnHelper = createColumnHelper<PaginationTableType>();
 
 function OrderTable() {
   const dispatch = useDispatch<AppDispatch>();
-
-  const [selectedRow, setSelectedRow] = useState<PaginationTableType | null>(null);
-
-  const products = useSelector((state: RootState) => state.product.products) as any;
+  const { orders } = useSelector((state: RootState) => state.orders) as any;
 
   const [searchText, setSearchText] = useState('');
 
-  const [modals, setModals] = useState({
-    add: false,
-    edit: false,
-    view: false,
-    delete: false,
-  });
-
   useEffect(() => {
-    dispatch(getCategory());
-    dispatch(getProduct());
+    dispatch(getOrder());
   }, [dispatch]);
 
-  const handleDelete = (row) => {
-    const id = row?.id;
-    dispatch(deleteProduct(id));
-    toast.success('Product deleted successfully');
-  };
-
-  const handleModal = (type: keyof typeof modals, value: boolean, row?: PaginationTableType) => {
-    setModals((prev) => ({ ...prev, [type]: value }));
-    setSelectedRow(row);
-  };
-
+  // ✅ Filter
   const filteredData = useMemo(() => {
-    if (!searchText) return products;
+    if (!searchText) return orders || [];
 
-    return products.filter((item: any) =>
-      item?.product_name?.toLowerCase().includes(searchText.toLowerCase()),
+    return orders.filter((item: any) =>
+      item?.order_number?.toLowerCase().includes(searchText.toLowerCase()),
     );
-  }, [products, searchText]);
+  }, [orders, searchText]);
+
+  // ✅ Status Color Helper
+  const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-600';
+      case 'completed':
+      case 'delivered':
+        return 'bg-green-100 text-green-600';
+      case 'cancelled':
+        return 'bg-red-100 text-red-600';
+      default:
+        return 'bg-gray-100 text-gray-600';
+    }
+  };
 
   const columns = [
-    columnHelper.accessor((row) => row?.category?.name ?? '-', {
-      id: 'category_id',
-      header: () => <span className="text-base">Order ID</span>,
-      cell: (info) => (
-        <div className="truncate max-w-56">
-          <h6 className="text-base">{info.getValue()}</h6>
-        </div>
-      ),
+    // ✅ Order ID
+    columnHelper.accessor('order_number', {
+      header: () => <span>Order ID</span>,
+      cell: (info) => <p className="font-semibold text-gray-700">#{info.getValue()}</p>,
     }),
 
-    columnHelper.accessor('product_name', {
-      cell: (info) => <p>{info.getValue() || 'No Number'}</p>,
-      header: () => <span>Product Name</span>,
-    }),
-
-    columnHelper.accessor('price', {
-      cell: (info) => <p>{info.getValue() || 'No Number'}</p>,
-      header: () => <span>Total Amount</span>,
-    }),
-
-    columnHelper.accessor('stock_quantity', {
-      cell: (info) => <p>{info.getValue() || 'No Number'}</p>,
-      header: () => <span>Qty</span>,
-    }),
-    columnHelper.accessor('stock_quantity', {
-      cell: (info) => <p>{info.getValue() || 'No Number'}</p>,
-      header: () => <span>Status</span>,
-    }),
-    columnHelper.accessor('stock_quantity', {
-      cell: (info) => <p>{info.getValue() || 'No Number'}</p>,
-      header: () => <span>Order Status</span>,
-    }),
-    columnHelper.accessor('stock_quantity', {
-      cell: (info) => <p>{info.getValue() || 'No Number'}</p>,
-      header: () => <span>Address</span>,
-    }),
-
-    columnHelper.accessor('id', {
+    columnHelper.accessor('user', {
+      header: () => <span>User</span>,
       cell: (info) => {
-        const row = info.row.original;
+        const user = info.getValue();
 
         return (
-          <div className="flex gap-2 notranslate" translate="no">
-            <Tooltip content="View">
-              <Button
-                size="xs"
-                color="primary"
-                outline
-                onClick={() => handleModal('view', true, row)}
-              >
-                <Icon icon="solar:eye-outline" height={18} />
-              </Button>
-            </Tooltip>
+          <div>
+            <p className="text-sm font-medium text-gray-800">{user?.name || 'Guest'}</p>
+            <p className="text-xs text-gray-500">{user?.email}</p>
           </div>
         );
       },
-      header: () => <span>Actions</span>,
     }),
+    // ✅ Products
+    columnHelper.accessor('order_items', {
+      header: () => <span>Products</span>,
+      cell: (info) => {
+        const items = info.row.original.order_items;
+
+        return (
+          <div className="max-h-24 overflow-y-auto space-y-1 pr-1">
+            {items?.length ? (
+              items.map((item: any, index: number) => (
+                <div key={index} className="border-b last:border-none pb-1">
+                  <p className="text-sm font-medium text-gray-800">
+                    {item?.Product?.product_name || 'N/A'}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Qty: {item?.quantity} • ₹{item?.Product?.price}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-400 text-sm">No products</p>
+            )}
+          </div>
+        );
+      },
+    }),
+
+    // ✅ Total
+    columnHelper.accessor('total_amount', {
+      header: () => <span>Total</span>,
+      cell: (info) => <p className="font-semibold text-green-600">₹{info.getValue()}</p>,
+    }),
+
+    // ✅ Payment Method
+    columnHelper.accessor('payment_method', {
+      header: () => <span>Payment</span>,
+      cell: (info) => (
+        <span className="text-sm text-gray-600 capitalize">{info.getValue() || 'N/A'}</span>
+      ),
+    }),
+
+    // ✅ Order Status
+    columnHelper.accessor('order_status', {
+      header: () => <span>Order Status</span>,
+      cell: (info) => (
+        <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(info.getValue())}`}>
+          {info.getValue()}
+        </span>
+      ),
+    }),
+
+    // ✅ Payment Status
+    columnHelper.accessor('payment_status', {
+      header: () => <span>Payment Status</span>,
+      cell: (info) => (
+        <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(info.getValue())}`}>
+          {info.getValue()}
+        </span>
+      ),
+    }),
+
+    // ✅ Address
+    columnHelper.accessor('shipping_address', {
+      header: () => <span>Address</span>,
+      cell: (info) => {
+        let address = info.getValue();
+
+        try {
+          if (typeof address === 'string') {
+            address = JSON.parse(address);
+          }
+        } catch (e) {}
+
+        return (
+          <div className="text-xs text-gray-600 leading-4 max-w-[200px]">
+            <p>{address?.address || ''}</p>
+            <p>
+              {address?.city}, {address?.state}
+            </p>
+            <p>{address?.zip_code}</p>
+          </div>
+        );
+      },
+    }),
+
+    // ✅ Actions
   ];
 
   const table = useReactTable({
@@ -146,33 +184,28 @@ function OrderTable() {
   });
 
   return (
-    <>
-      <div className="p-4 flex justify-between items-center">
+    <div className="bg-white rounded-2xl shadow-sm">
+      {/* 🔍 Search */}
+      <div className="p-4 flex flex-col sm:flex-row justify-between gap-3">
         <input
           type="text"
           placeholder="Search order..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          className="p-2 border rounded-md border-gray-300"
+          className="w-full sm:w-72 p-2 border rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 outline-none"
         />
       </div>
 
+      {/* 📊 Table */}
       <div className="w-full overflow-x-auto">
         <TableComponent table={table} flexRender={flexRender} columns={columns} />
       </div>
 
-      <PaginationComponent table={table} />
-
-      {modals.delete && (
-        <ComonDeletemodal
-          isOpen={modals.delete}
-          setIsOpen={() => handleModal('delete', false)}
-          selectedUser={selectedRow}
-          title="Are you sure you want to delete this Product?"
-          handleConfirmDelete={handleDelete}
-        />
-      )}
-    </>
+      {/* 📄 Pagination */}
+      <div className="p-4">
+        <PaginationComponent table={table} />
+      </div>
+    </div>
   );
 }
 

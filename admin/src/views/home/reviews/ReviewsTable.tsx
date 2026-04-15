@@ -24,15 +24,14 @@ export interface ReviewTableType {
   id: number;
   title: string;
   description: string;
-  image: string;
+  type: string;
 }
 
-/* ================= COLUMN HELPER ================= */
 const columnHelper = createColumnHelper<ReviewTableType>();
 
 function ReviewTable() {
   const dispatch = useDispatch<AppDispatch>();
-  const blogs = useSelector((state: RootState) => state.blog.blogs) as ReviewTableType[];
+  const reviews = useSelector((state: RootState) => state.review.reviews);
 
   const [selectedRow, setSelectedRow] = useState<ReviewTableType | null>(null);
 
@@ -42,7 +41,7 @@ function ReviewTable() {
     delete: false,
   });
 
-  /* ================= FETCH DATA ================= */
+  /* ================= FETCH ================= */
   useEffect(() => {
     dispatch(getReview());
   }, [dispatch]);
@@ -51,34 +50,63 @@ function ReviewTable() {
   const handleDelete = (row: ReviewTableType) => {
     dispatch(deleteReview(row.id));
     toast.success('Review deleted successfully');
-    setModals({ ...modals, delete: false });
+    setModals((prev) => ({ ...prev, delete: false }));
   };
 
-  /* ================= MODAL HANDLER ================= */
+  /* ================= MODAL ================= */
   const handleModal = (type: keyof typeof modals, value: boolean, row?: ReviewTableType) => {
     setModals((prev) => ({ ...prev, [type]: value }));
     if (row) setSelectedRow(row);
   };
 
+  /* ================= TYPE BADGE ================= */
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'shop':
+        return 'bg-blue-100 text-blue-600';
+      case 'puja':
+        return 'bg-purple-100 text-purple-600';
+      case 'tour':
+        return 'bg-green-100 text-green-600';
+      case 'cab':
+        return 'bg-yellow-100 text-yellow-600';
+      default:
+        return 'bg-gray-100 text-gray-600';
+    }
+  };
+
   /* ================= COLUMNS ================= */
   const columns = [
+    // ✅ Title
     columnHelper.accessor('title', {
       header: () => <span>Title</span>,
-      cell: (info) => <span className="font-medium">{info.getValue()}</span>,
+      cell: (info) => <span className="font-semibold text-gray-800">{info.getValue()}</span>,
     }),
 
+    // ✅ Type
+    columnHelper.accessor('type', {
+      header: () => <span>Type</span>,
+      cell: (info) => (
+        <span className={`px-2 py-1 text-xs rounded-full ${getTypeColor(info.getValue())}`}>
+          {info.getValue()}
+        </span>
+      ),
+    }),
+
+    // ✅ Description
     columnHelper.accessor('description', {
       header: () => <span>Description</span>,
       cell: (info) => {
         const desc = info.getValue();
         return (
-          <span className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 max-w-[250px]">
             {desc?.length > 80 ? desc.substring(0, 80) + '...' : desc}
-          </span>
+          </p>
         );
       },
     }),
 
+    // ✅ Actions
     columnHelper.accessor('id', {
       header: () => <span>Actions</span>,
       cell: (info) => {
@@ -113,18 +141,20 @@ function ReviewTable() {
     }),
   ];
 
-  /* ================= TABLE INSTANCE ================= */
+  /* ================= TABLE ================= */
   const table = useReactTable({
-    data: blogs || [],
+    data: reviews || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
-    <>
+    <div className="bg-white rounded-2xl shadow-sm">
       {/* Header */}
-      <div className="p-4 flex justify-end">
+      <div className="p-4 flex justify-between items-center">
+        <h2 className="text-lg font-semibold">Reviews</h2>
+
         <Button color="primary" onClick={() => handleModal('add', true)}>
           Add Review
         </Button>
@@ -136,14 +166,16 @@ function ReviewTable() {
       </div>
 
       {/* Pagination */}
-      <PaginationComponent table={table} />
+      <div className="p-4">
+        <PaginationComponent table={table} />
+      </div>
 
-      {/* Create Modal */}
+      {/* Create */}
       {modals.add && (
         <CreateReview openModal={modals.add} setOpenModal={() => handleModal('add', false)} />
       )}
 
-      {/* Edit Modal */}
+      {/* Edit */}
       {modals.edit && selectedRow && (
         <EditReview
           openModal={modals.edit}
@@ -152,17 +184,17 @@ function ReviewTable() {
         />
       )}
 
-      {/* Delete Modal */}
+      {/* Delete */}
       {modals.delete && selectedRow && (
         <ComonDeletemodal
           isOpen={modals.delete}
           setIsOpen={() => handleModal('delete', false)}
           selectedUser={selectedRow}
-          title="Are you sure you want to delete this blog?"
+          title="Are you sure you want to delete this review?"
           handleConfirmDelete={() => handleDelete(selectedRow)}
         />
       )}
-    </>
+    </div>
   );
 }
 

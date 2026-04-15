@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const Category = sequelize.define(
-    "Category",
+  const ClientReview = sequelize.define(
+    "ClientReview",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -12,25 +12,17 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-
-      name: {
+      type: {
         type: DataTypes.STRING,
         allowNull: false
       },
-
-      slug: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
-      },
-
-      icon: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        comment: "Banner image path"
       },
 
       created_at: {
@@ -44,18 +36,12 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: "categories",
+      tableName: "clientreviews",
       timestamps: true,
       underscored: true,
-      paranoid: true // soft delete
+      paranoid: true // soft delete enabled
     }
   );
 
-  Category.associate = (models) => {
-    Category.hasMany(models.Product, {
-      foreignKey: "category_id"
-    });
-  };
-
-  return Category;
+  return ClientReview;
 };

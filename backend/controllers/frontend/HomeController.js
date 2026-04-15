@@ -11,7 +11,8 @@ const {
   PujaCategory,
   Package,
   City,
-  State
+  State,
+  ClientReview
 } = db;
 
 /* ================= GET Marquee ================= */
@@ -49,6 +50,12 @@ exports.getAllHomedata = async (req, res) => {
     });
 
     const products = await Product.findAll({
+      include: [
+        {
+          model: Category,
+          as: "category"
+        }
+      ],
       order: [["created_at", "DESC"]]
     });
 
@@ -57,6 +64,10 @@ exports.getAllHomedata = async (req, res) => {
     });
 
     const blogs = await Blog.findAll({
+      order: [["created_at", "DESC"]]
+    });
+
+    const reviews = await ClientReview.findAll({
       order: [["created_at", "DESC"]]
     });
 
@@ -77,6 +88,7 @@ exports.getAllHomedata = async (req, res) => {
       products: products,
       cabs: cabs,
       blogs: blogs,
+      reviews: reviews,
       pujas: pujas,
       tour: tourpackage
     });

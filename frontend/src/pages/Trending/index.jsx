@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaThLarge, FaList, FaHeart, FaShoppingCart, FaEye, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import religiousProducts from '../../data/products';
@@ -9,9 +9,11 @@ import PageHeader from '../../components/common/PageHeader';
 import ProductFilters from '../../components/common/ProductFilters';
 import MobileFilterDrawer from '../../components/common/MobileFilterDrawer';
 import ProductCard from '../../components/common/ProductCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProduct } from '../../features/shop/ProductSlice';
 
 const Trending = () => {
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedCategory, setSelectedCategory] = useState('all');
     const [priceRange, setPriceRange] = useState(5000);
     const [viewMode, setViewMode] = useState('grid');
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -19,12 +21,30 @@ const Trending = () => {
     const { addToCart } = useCart();
     const { isInWishlist, toggleWishlist } = useWishlist();
 
-    const products = religiousProducts;
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.product.shop);
+    const category = data?.category || [];
+    const products = data?.products || [];
 
-    const categories = ['All', 'Idols & Statues', 'Rudraksha & Beads', 'Pooja Samagri', 'Religious Books', 'Incense & Agarbatti', 'Home Decor'];
+    useEffect(() => {
+        dispatch(getProduct());
+    }, [dispatch]);
+
+
+    // const products = religiousProducts;
+
+
+ const categories = [
+  { id: 'all', name: 'All', slug: 'all' },
+  ...category.map((cat) => ({
+    id: cat.slug,
+    name: cat.name,
+    slug: cat.slug,
+  }))
+];
 
     const filteredProducts = products.filter((product) => {
-        const categoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
+        const categoryMatch = selectedCategory == 'all' || product.category === selectedCategory;
         const priceMatch = product.price <= priceRange;
         return categoryMatch && priceMatch;
     });

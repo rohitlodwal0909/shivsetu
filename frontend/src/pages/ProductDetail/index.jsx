@@ -431,10 +431,10 @@ const ProductDetail = () => {
                                     <div className="flex items-center gap-3 mb-6">
                                         <div className="flex items-center gap-1">
                                             {[...Array(5)].map((_, i) => (
-                                                <FaStar key={i} className={`${i < Math.floor(products?.rating) ? 'text-yellow-500' : 'text-gray-300'}`} />
+                                                <FaStar key={i} className={`${i < Math.floor(products?.rating || 4) ? 'text-yellow-500' : 'text-gray-300'}`} />
                                             ))}
                                         </div>
-                                        <span className="text-gray-900 font-semibold">{products?.rating}</span>
+                                        <span className="text-gray-900 font-semibold">{products?.rating || 4}</span>
                                         <span className="text-gray-500">({products?.reviews} {isHindi ? 'समीक्षाएं' : 'reviews'})</span>
                                     </div>
 

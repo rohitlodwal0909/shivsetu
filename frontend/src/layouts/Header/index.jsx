@@ -7,9 +7,9 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import Marquee from './components/Marquee';
 import LanguageDropdown from './components/LanguageDropdown';
-import { religiousProducts } from '../../data/products';
 import './MegaMenu.css';
 import './Header.css';
+import { IMAGE_URL } from '../../utils/constants';
 
 const Header = ({ onToggleChat }) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -24,7 +24,7 @@ const Header = ({ onToggleChat }) => {
     const searchInputRef = useRef(null);
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { t, toggleLanguage, language, isHindi } = useLanguage();
+    const {  isHindi } = useLanguage();
     const { getCartCount, addToCart, cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
     const { getWishlistCount, wishlistItems, removeFromWishlist } = useWishlist();
 
@@ -142,15 +142,13 @@ const Header = ({ onToggleChat }) => {
                         </nav>
 
                         {/* Center Logo */}
-                        <Link to="/" className="header-logo">
-                            <div className="logo-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                                    <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                </svg>
-                            </div>
-                            <span className="logo-text">ECOM</span>
-                        </Link>
+                       <Link to="/" className="block w-[100px] sm:w-[150px] flex-none">
+  <img
+    src={IMAGE_URL + "logo/logo.svg"}
+    alt="Company Logo"
+    className="w-full h-auto object-contain"
+  />
+</Link>
 
                         {/* Right Actions */}
                         <div className="header-actions">
@@ -388,7 +386,7 @@ const Header = ({ onToggleChat }) => {
                                             <div key={item.id} className="flex gap-3 items-center">
                                                 <Link to={`/product/${item.id}`} onClick={() => setIsWishlistOpen(false)} className="shrink-0">
                                                     <img
-                                                        src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80'}
+                                                        src={IMAGE_URL + item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80'}
                                                         alt={isHindi ? item.name : (item.nameEn || item.name)}
                                                         className="w-16 h-16 object-cover rounded-xl"
                                                     />
@@ -460,7 +458,7 @@ const Header = ({ onToggleChat }) => {
                                             <div key={item.id} className="flex gap-3 items-center">
                                                 <Link to={`/product/${item.id}`} onClick={() => setIsCartOpen(false)} className="shrink-0">
                                                     <img
-                                                        src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80'}
+                                                        src={IMAGE_URL + "products/" + item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=200&q=80'}
                                                         alt={isHindi ? item.name : (item.nameEn || item.name)}
                                                         className="w-14 h-14 object-cover rounded-xl"
                                                     />

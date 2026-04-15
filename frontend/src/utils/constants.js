@@ -1,5 +1,5 @@
 // Application constants and configuration
-export const api = "https://shivsetu.com";
+export const api = "https://shivsetu.com/";
 // export const api = "http://localhost:5000/";
 
 export const API_BASE_URL = `${api}api`;

@@ -1,6 +1,6 @@
 import { IMAGE_URL } from "../../utils/constants";
 
-const PageHeader = ({ title, subtitle, breadcrumb = [] }) => {
+const PageHeader = () => {
     return (
         <div className="relative w-full overflow-hidden">
             
@@ -8,7 +8,7 @@ const PageHeader = ({ title, subtitle, breadcrumb = [] }) => {
             <div className="relative w-full h-[180px] sm:h-[220px] md:h-[350px] lg:h-[400px]">
                 
                 <img
-                    src={IMAGE_URL + "shop.png"}
+                    src={IMAGE_URL + "/logo/logo.svg"}
                     alt="Spiritual Banner"
                     className="w-full h-full object-cover object-center"
                 />

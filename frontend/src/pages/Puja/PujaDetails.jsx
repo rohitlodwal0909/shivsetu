@@ -8,10 +8,9 @@ import {
 } from 'react-icons/fa';
 import SafeImage from '../../components/common/SafeImage';
 import { AnimatePresence, motion } from 'framer-motion';
-// import pujas from '../../data/pujas';
 import { useDispatch, useSelector } from 'react-redux';
-import { getHomedata } from '../../features/home/HomeSlice';
 import { getPujaWithSlug } from '../../features/puja/PujaSlice';
+import { formatDate } from '../../components/datetimer/date';
 
 const SectionTitle = ({ title, showViewAll = false }) => (
     <div className="flex items-center justify-between mb-4 px-4 md:px-0">
@@ -224,7 +223,7 @@ const PujaDetails = () => {
                                     <FaUserFriends className="text-orange-400" /> {pujas?.joined || 1000}+ Joined
                                 </span>
                                 <span className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs md:text-sm">
-                                    <FaCalendarAlt className="text-orange-400" /> {pujas?.date}
+                                    <FaCalendarAlt className="text-orange-400" />{formatDate(pujas?.date)}
                                 </span>
                                 <span className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs md:text-sm">
                                     <FaClock className="text-orange-400" /> {pujas?.puja_duration || "2-3 Hours"}

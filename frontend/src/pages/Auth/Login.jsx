@@ -12,7 +12,7 @@ const Login = () => {
     const { login, user } = useAuth();
     const dispatch = useDispatch();
 
-    const [activeTab, setActiveTab] = useState('mobile');
+    const [activeTab, setActiveTab] = useState('');
     const [loading, setLoading] = useState(false);
 
     const [mobileNumber, setMobileNumber] = useState('');
@@ -86,6 +86,8 @@ const handlePasswordSubmit = async (e) => {
                             <span className="text-[#e14503]">ShivSetu</span>
                         </h2>
 
+
+
                         <p className="text-gray-300">
                             भक्त और भगवान शिव के बीच एक पावन सेतु।
                             पूजा सामग्री, रुद्राक्ष, ज्योतिष सेवाएं और आध्यात्मिक मार्गदर्शन —
@@ -132,7 +134,7 @@ const handlePasswordSubmit = async (e) => {
                         </div>
 
                         {/* Tabs */}
-                        <div className="flex p-1 bg-gray-100 rounded-xl mb-8 relative">
+                        {/* <div className="flex p-1 bg-gray-100 rounded-xl mb-8 relative">
                             <div
                                 className="absolute inset-y-1 left-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm transition-all"
                                 style={{
@@ -159,7 +161,7 @@ const handlePasswordSubmit = async (e) => {
                             >
                                 <FaLock className="inline mr-1" /> Password
                             </button>
-                        </div>
+                        </div> */}
 
                         <AnimatePresence mode="wait">
                             {activeTab === 'mobile' ? (
@@ -247,7 +249,7 @@ const handlePasswordSubmit = async (e) => {
                                             value={mobile}
                                             onChange={(e) => setEmailOrMobile(e.target.value)}
                                             className="w-full px-4 py-4 bg-gray-50 rounded-xl border focus:border-[#e14503] outline-none"
-                                            placeholder="Email or Mobile"
+                                            placeholder="Mobile"
                                             required
                                         />
 

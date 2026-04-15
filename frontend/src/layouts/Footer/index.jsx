@@ -16,6 +16,7 @@ import {
 import { FiChevronDown } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../context/LanguageContext';
+import { IMAGE_URL } from '../../utils/constants';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -104,11 +105,12 @@ const Footer = () => {
                 <div className="max-w-7xl mx-auto px-4 py-16">
                     <div className="grid grid-cols-2 lg:grid-cols-5 gap-8">
                         <div className="lg:col-span-2">
-                            <Link to="/" className="flex items-center gap-2 mb-4">
-                                <div className="w-10 h-10 bg-[#e14503] rounded-lg flex items-center justify-center">
-                                    <span className="text-white font-bold text-xl">S</span>
-                                </div>
-                                <span className="text-2xl font-bold text-gray-900">ShivSetu.com</span>
+                            <Link to="/" className="block w-[100px] sm:w-[150px] flex-none">
+                                   <img
+                                     src={IMAGE_URL + "logo/logo.svg"}
+                                     alt="Shiv Setu"
+                                     className="w-full h-auto object-contain"
+                                   />
                             </Link>
                             <p className="text-gray-600 mb-6">
                                 Your one-stop destination for premium quality products and spiritual services. Shop with confidence.
@@ -173,9 +175,16 @@ const Footer = () => {
                 {/* Brand Header */}
                 <div className="flex flex-col items-center justify-center py-6 bg-white border-b border-gray-100">
                     <div className="w-12 h-12 bg-[#e14503] rounded-xl flex items-center justify-center shadow-lg mb-2">
-                        <span className="text-white font-bold text-2xl">S</span>
+                        {/* <span className="text-white font-bold text-2xl">S</span> */}
+                       <Link to="/" className="block w-[100px] sm:w-[150px] flex-none">
+                         <img
+                           src={IMAGE_URL + "logo/logo.svg"}
+                           alt="Shiv Setu"
+                           className="w-full h-auto object-contain"
+                         />
+                       </Link>
                     </div>
-                    <span className="text-xl font-bold text-gray-900">ShivSetu.com</span>
+                    {/* <span className="text-xl font-bold text-gray-900">ShivSetu.com</span> */}
                     <p className="text-xs text-gray-500 mt-1">Premium Spiritual Store</p>
                 </div>
 

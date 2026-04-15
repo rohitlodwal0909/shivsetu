@@ -15,6 +15,8 @@ const pujapackageRoutes = require("../routes/pujamanagment/pujapackageRoutes");
 const sliderRoutes = require("../routes/homemanagment/sliderRoutes");
 const marqueeRoutes = require("../routes/homemanagment/marqueeRoutes");
 const blogRoutes = require("../routes/homemanagment/blogRoutes");
+const ordersRoutes = require("../routes/productmanagment/orderRoutes");
+const reviewRoutes = require("../routes/homemanagment/reviewRoutes");
 // End Admin Routes
 
 //Frontend Routes
@@ -48,5 +50,7 @@ router.use("/api/cab", AuthMiddleware, cabRoutes);
 router.use("/api/slider", AuthMiddleware, sliderRoutes);
 router.use("/api/marquee", AuthMiddleware, marqueeRoutes);
 router.use("/api/blog", AuthMiddleware, blogRoutes);
+router.use("/api/orders", AuthMiddleware, ordersRoutes);
+router.use("/api/review", AuthMiddleware, reviewRoutes);
 
 module.exports = router;

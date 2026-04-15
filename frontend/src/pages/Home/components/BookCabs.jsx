@@ -16,6 +16,7 @@ const BookCabs = ({cabs}) => {
         navigate(`/booking/cabs/book/${cab.id}`);
     };
 
+
     return (
         <section className="py-10 lg:py-20 bg-gray-50">
             <div className="max-w-7xl mx-auto px-4">
@@ -71,7 +72,7 @@ const BookCabs = ({cabs}) => {
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-700 font-medium">
                                     <FaSnowflake className="text-lg text-gray-500" />
-                                    <span>{cab?.ac_type}</span>
+                                    <span>{cab?.ac_type || "Non AC"}</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-gray-700 font-medium">
                                     <FaMusic className="text-lg text-gray-500" />

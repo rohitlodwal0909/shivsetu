@@ -1,83 +1,52 @@
 const db = require("../../models");
-const { Product, Category } = db;
+const { Order, OrderItem, Product, User } = db;
 
-exports.create = async (req, res) => {
-    try {
-        const {
-            category_id,
-            product_name,
-            short_description,
-            full_description,
-            price,
-            mrp,
-            discount_percent,
-            stock_quantity,
-        } = req.body;
-
-        // Banner Image
-        let bannerImage = null;
-        if (req.files?.image) {
-            bannerImage = req.files.image[0].filename;
+exports.getOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: OrderItem,
+          as: "order_items", // 👈 same alias as association
+          attributes: ["id", "product_id", "quantity"],
+          include: [
+            {
+              model: Product,
+              attributes: ["product_name", "price"]
+            }
+          ]
+        },
+        {
+          model: User,
+          as: "user", // 👈 same alias as association
+          attributes: ["name", "email"]
         }
+      ]
+    });
 
-        // Gallery Images
-        let galleryImages = [];
-        if (req.files?.gallery) {
-            galleryImages = req.files.gallery.map((file) => file.filename);
-        }
-        const slug = generateSlug(product_name);
+    // ✅ Optional: parse JSON fields
+    const formattedOrders = orders.map((order) => {
+      const data = order.toJSON();
 
-        const product = await Product.create({
-            user_id: req.admin.id,
-            category_id,
-            slug,
-            product_name,
-            short_description,
-            full_description,
-            price,
-            mrp,
-            discount_percent,
-            stock_quantity,
-            image: bannerImage,
-            gallery: galleryImages,
-        });
+      return {
+        ...data,
+        shipping_address: data.shipping_address
+          ? JSON.parse(data.shipping_address)
+          : null
+      };
+    });
 
-        return res.status(201).json({
-            success: true,
-            message: "Product created successfully",
-            data: product,
-        });
-    } catch (error) {
-        console.error("🔥 MYSQL ERROR:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Product creation failed",
-            error: error.original?.message || error.message,
-        });
-    }
-};
-
-exports.getProduct = async (req, res) => {
-    try {
-        const products = await Product.findAll({
-            include: [
-                {
-                    model: Category,
-                    as: "category",
-                },
-            ],
-        });
-
-        return res.status(201).json({
-            success: true,
-            products,
-        });
-    } catch (error) {
-        console.error("🔥 MYSQL ERROR:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Products find failed",
-            error: error.original?.message || error.message,
-        });
-    }
+    return res.status(200).json({
+      success: true,
+      orders: formattedOrders
+    });
+  } catch (error) {
+    console.error("🔥 MYSQL ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Orders fetch failed",
+      error: error.original?.message || error.message
+    });
+  }
 };
