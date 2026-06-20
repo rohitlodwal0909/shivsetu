@@ -7,22 +7,22 @@ import { API_BASE_URL } from '../../utils/constants';
 const initialState = {
   loading: false,
   error: null,
-  pujas: null,
-  pujaDetails: null,
+  pandits: null,
+  panditsDetails: null,
   book: null,
 };
 
 /* ================= THUNKS ================= */
 
 // GET MARQUEE DATA
-export const getPuja = createAsyncThunk(
-  'puja/get',
+export const getPandits = createAsyncThunk(
+  'Pandits/get',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/puja/get-puja`,
+        `${API_BASE_URL}/pandits/get-pandits`,
       );
-      return response.data;
+      return response.data.pandits;
     } catch (err) {
       return rejectWithValue(
             err.response?.data?.message || 'Home data fetch failed',
@@ -31,14 +31,14 @@ export const getPuja = createAsyncThunk(
   },
 );
 
-export const getPujaWithSlug = createAsyncThunk(
-  'puja/pujaWithSlug',
+export const getPanditsWithSlug = createAsyncThunk(
+  'Pandits/PanditsWithSlug',
   async (slug, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/puja/get-puja-details/${slug}`,
+        `${API_BASE_URL}/pandits/get-pandits-details/${slug}`,
       );
-      return response.data;
+      return response.data.pandit;
     } catch (err) {
       return rejectWithValue(
             err.response?.data?.message || 'Home data fetch failed',
@@ -48,13 +48,11 @@ export const getPujaWithSlug = createAsyncThunk(
 );
 
 
-
-
-export const bookPuja = createAsyncThunk(
-  'puja/book',
+export const bookPandits = createAsyncThunk(
+  'Pandits/book',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/puja/book`, formData);
+      const response = await axios.post(`${API_BASE_URL}/pandits/book`, formData);
       return response.data;
     } catch (err) {
       return rejectWithValue(
@@ -67,49 +65,49 @@ export const bookPuja = createAsyncThunk(
 
 /* ================= SLICE ================= */
 
-const PujaSlice = createSlice({
-  name: 'puja',
+const PanditsSlice = createSlice({
+  name: 'pandits',
   initialState,
   reducers: {},
 
   extraReducers: (builder) => {
     builder
-    
+
       // GET MARQUEE
-      .addCase(getPuja.pending, (state) => {
+      .addCase(getPandits.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getPuja.fulfilled, (state, action) => {
+      .addCase(getPandits.fulfilled, (state, action) => {
         state.loading = false;
-        state.pujas = action.payload;
+        state.pandits = action.payload;
       })
-      .addCase(getPuja.rejected, (state, action) => {
+      .addCase(getPandits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getPujaWithSlug.pending, (state) => {
+      .addCase(getPanditsWithSlug.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getPujaWithSlug.fulfilled, (state, action) => {
+      .addCase(getPanditsWithSlug.fulfilled, (state, action) => {
         state.loading = false;
-        state.pujaDetails = action.payload;
+        state.panditsDetails = action.payload;
       })
-      .addCase(getPujaWithSlug.rejected, (state, action) => {
+      .addCase(getPanditsWithSlug.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(bookPuja.pending, (state) => {
+      .addCase(bookPandits.pending, (state) => {
         state.loading = true;
       })
-      .addCase(bookPuja.fulfilled, (state, action) => {
+      .addCase(bookPandits.fulfilled, (state, action) => {
         state.loading = false;
         state.book = action.payload;
       })
-      .addCase(bookPuja.rejected, (state, action) => {
+      .addCase(bookPandits.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export default PujaSlice.reducer;
+export default PanditsSlice.reducer;

@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
 
+      payment_id: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+
       total_amount: {
         type: DataTypes.FLOAT,
         allowNull: false

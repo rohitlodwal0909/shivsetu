@@ -3,12 +3,12 @@ import { FaMapMarkerAlt, FaCalendarAlt, FaStar, FaChevronRight } from 'react-ico
 import SafeImage from '../../../components/common/SafeImage';
 import { formatDate } from '../../../components/datetimer/date';
 
-const MobilePujaCard = ({ id, image, title, location, date, price, tag, rating, slots }) => {
+const MobilePujaCard = ({ slug, image, title, location, date, price, tag, rating, slots }) => {
     const navigate = useNavigate();
 
     return (
         <div
-            onClick={() => navigate(`/puja/${id}`)}
+            onClick={() => navigate(`/puja/${slug}`)}
             className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 mb-6 active:scale-[0.98] transition-transform"
         >
             <div className="relative h-56 w-full">

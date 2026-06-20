@@ -11,6 +11,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPujaWithSlug } from '../../features/puja/PujaSlice';
 import { formatDate } from '../../components/datetimer/date';
+import { getReviews } from '../../features/home/HomeSlice';
+import CountdownTimer from '../../components/CountdownTimer';
+import { getTypeIcon } from '../../components/TypeIcon';
 
 const SectionTitle = ({ title, showViewAll = false }) => (
     <div className="flex items-center justify-between mb-4 px-4 md:px-0">
@@ -54,24 +57,40 @@ const PujaDetails = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { isHindi } = useLanguage();
-    const  { pujaDetails }  = useSelector((state) => state.puja);
+    const  { pujaDetails }  = useSelector((state) => state.puja) || [];
+    const  { reviews }  = useSelector((state) => state.home) || [];
+
+const targetTimeRef = useRef(null);
     const pujas = pujaDetails?.pujas;
 
     const dispatch = useDispatch();
 
     useEffect(() => {
+        if(slug){
     dispatch(getPujaWithSlug(slug))
+    dispatch(getReviews('puja'))
+
+        }
+    
     },[dispatch,slug])
 
+      
+
+        const [bookingClosed, setBookingClosed] = useState(false);
+
+
+        useEffect(() => {
+  if (!pujas?.date) return;
+
+  targetTimeRef.current = new Date(pujas.date).getTime();
+}, [pujas?.date]);
     
     const images = pujas?.gallery.length > 0 ? JSON.parse(pujas?.gallery) : [];
     
 
-    // State
     const [activeSection, setActiveSection] = useState('about');
     const [selectedPackage, setSelectedPackage] = useState(1);
     const [expandedAccordion, setExpandedAccordion] = useState('benefits');
-    const [timeLeft, setTimeLeft] = useState({ days: 10, hours: 8, mins: 12, secs: 25 });
 
 
    const process= [
@@ -88,87 +107,6 @@ const PujaDetails = () => {
         ]
 
 
-    // Mock Data
-    // Find Puja Data
-    // const puja = pujas.find(p => p.id === parseInt(id));
-
-    // if (!puja) {
-    //     return <div className="min-h-screen flex items-center justify-center">Puja not found</div>;
-    // }
-
-    // Merged Data (Preserving detail-specific fields while using global ID/Title/Image)
-    // const pujas = {
-    //     ...puja,
-    //     // Mocking detail fields that are not in the list view data yet
-    //     joined: 1250,
-    //     images: [
-    //         puja.image,
-    //         "https://images.unsplash.com/photo-1604514787989-18342203e06f?q=80&w=1200",
-    //         "https://images.unsplash.com/photo-1542450372-749c8922c0b9?q=80&w=1200"
-    //     ],
-    //     packages: [
-    //         {
-    //             id: 1,
-    //             name: "One Member",
-    //             subtitle: "For 1 Person",
-    //             price: 991,
-    //             image: "/Images/puja/one_member_puja_1771394742279.png", // Updated to match user file
-    //             features: [
-    //                 "On Puja Day, pandit ji will perform the puja rituals & call out your name and gotra in sankalp",
-    //                 "After puja completion, you will receive a video of the puja ceremony with your name-gotra on Whatsapp and email",
-    //                 "After selection in offerings, Sacred puja prasad will be delivered to your home"
-    //             ]
-    //         },
-    //         {
-    //             id: 2,
-    //             name: "2 Members",
-    //             subtitle: "For Couple",
-    //             price: 1501,
-    //             image: "/Images/puja/puja_two_members_1771395618244.png", // Updated to match user file
-    //             features: [
-    //                 "On Puja Day, pandit ji will perform the puja rituals & call out names and gotras of 2 members in sankalp",
-    //                 "After puja completion, you will receive a video of the puja ceremony with your name-gotra on Whatsapp and email",
-    //                 "After selection in offerings, Sacred puja prasad will be delivered to your home"
-    //             ]
-    //         },
-    //         {
-    //             id: 3,
-    //             name: "4 Members",
-    //             subtitle: "For Family",
-    //             price: 2501,
-    //             image: "/Images/puja/four_members_puja_1771394861412.png", // Updated to match user file
-    //             features: [
-    //                 "On Puja Day, pandit ji will perform the puja rituals & call out names and gotras of 4 members in sankalp",
-    //                 "After puja completion, you will receive a video of the puja ceremony with your name-gotra on Whatsapp and email",
-    //                 "After selection in offerings, Sacred puja prasad will be delivered to your home"
-    //             ]
-    //         },
-    //         {
-    //             id: 4,
-    //             name: "6 Members",
-    //             subtitle: "For Big Family",
-    //             price: 3501,
-    //             image: "/Images/puja/six_members_puja_1771394943349.png", // Updated to match user file
-    //             features: [
-    //                 "On Puja Day, pandit ji will perform the puja rituals & call out names and gotras of 6 members in sankalp",
-    //                 "After puja completion, you will receive a video of the puja ceremony with your name-gotra on Whatsapp and email",
-    //                 "After selection in offerings, Sacred puja prasad will be delivered to your home"
-    //             ]
-    //         },
-    //     ],
-    //     process: [
-    //         { title: "Booking", desc: "Select package & provide details" },
-    //         { title: "Sankalp", desc: "Pandit ji takes sankalp with your name" },
-    //         { title: "Puja Performance", desc: "Rituals performed at the temple" },
-    //         { title: "Prasad", desc: "Holy prasad shipped to your home" },
-    //     ],
-    //     benefits: ["Removal of negative energy and evil eye.", "Victory over enemies and legal disputes.", "Production health and prosperity.", "Peace of mind and family harmony."],
-    //     temple: "The Nagchandreshwar Mandir in Ujjain is a rare temple devoted to Lord Shiva. It opens only once a year on Nag Panchami, making it incredibly significant for special prayers.",
-    //     faqs: [
-    //         { q: "Is physical presence required?", a: "No, this is an online puja performed on your behalf." },
-    //         { q: "When will I get Prasad?", a: "Prasad is dispatched within 48 hours of the puja." },
-    //     ]
-    // };
 
     // Scroll to section handler
     const scrollToSection = (id) => {
@@ -226,18 +164,14 @@ const PujaDetails = () => {
                                     <FaCalendarAlt className="text-orange-400" />{formatDate(pujas?.date)}
                                 </span>
                                 <span className="hidden md:flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 text-xs md:text-sm">
-                                    <FaClock className="text-orange-400" /> {pujas?.puja_duration || "2-3 Hours"}
+                                    <FaClock className="text-orange-400" /> {pujas?.puja_duration || "2-3 Hours"} 
                                 </span>
                             </div>
 
-                            <div className="inline-flex items-center gap-4 bg-orange-600/90 backdrop-blur-md text-white px-4 py-2 rounded-xl shadow-lg border border-orange-500/50">
-                                <span className="text-xs font-bold uppercase tracking-wide opacity-90">Booking Closes In:</span>
-                                <div className="flex gap-1.5 text-sm md:text-base font-bold font-mono">
-                                    <div className="bg-black/20 rounded px-1.5 py-0.5">{timeLeft.days}d</div> :
-                                    <div className="bg-black/20 rounded px-1.5 py-0.5">{timeLeft.hours}h</div> :
-                                    <div className="bg-black/20 rounded px-1.5 py-0.5">{timeLeft.mins}m</div>
-                                </div>
-                            </div>
+                              {<CountdownTimer
+  date={pujas?.date}
+  onClose={setBookingClosed}
+/>}
                         </div>
                     </div>
                 </div>
@@ -447,29 +381,52 @@ const PujaDetails = () => {
 
                         {/* 6. Reviews Preview */}
                         <div id="reviews" className="pb-8">
-                            <SectionTitle title="Devotee Reviews" showViewAll />
-                            <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide snap-x">
-                                {[1, 2, 3].map((r) => (
-                                    <div key={r} className="min-w-[280px] bg-white p-5 rounded-2xl border border-gray-100 shadow-sm snap-center hover:shadow-md transition-shadow">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden border border-gray-100">
-                                                <SafeImage src={`https://i.pravatar.cc/100?img=${r + 10}`} className="w-full h-full" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-sm font-bold text-gray-900">Rahul Sharma</h4>
-                                                <div className="flex text-yellow-400 text-[10px] gap-0.5">
-                                                    <FaStar /><FaStar /><FaStar /><FaStar /><FaStar />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p className="text-xs text-gray-600 leading-relaxed line-clamp-3 italic">
-                                            "Absolutely divine experience. The pandit ji was very knowledgeable and the sankalp provided me great peace of mind."
-                                        </p>
-                                    </div>
-                                ))}
-                                <div className="w-2 shrink-0 md:hidden"></div>
-                            </div>
-                        </div>
+  <SectionTitle title="Devotee Reviews" showViewAll />
+
+  <div className="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide snap-x">
+
+    {reviews?.length > 0 ? (
+      reviews.map((r, index) => (
+        <div
+          key={r.id || index}
+          className="min-w-[280px] bg-white p-5 rounded-2xl border border-gray-100 shadow-sm snap-center hover:shadow-md transition-shadow"
+        >
+          <div className="flex items-center gap-3 mb-3">
+
+            {/* ICON */}
+            <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden border border-gray-100 flex items-center justify-center">
+              {getTypeIcon(r.type)}
+            </div>
+
+            {/* TITLE + RATING */}
+            <div>
+              <h4 className="text-sm font-bold text-gray-900">
+                {r.title}
+              </h4>
+
+              <div className="flex text-yellow-400 text-[10px] gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* DESCRIPTION */}
+          <p className="text-xs text-gray-600 leading-relaxed line-clamp-3 italic">
+            {r.description}
+          </p>
+        </div>
+      ))
+    ) : (
+      <p className="text-sm text-gray-500 px-4">
+        No reviews available
+      </p>
+    )}
+
+    <div className="w-2 shrink-0 md:hidden"></div>
+  </div>
+</div>
                     </div>
 
                     {/* RIGHT COLUMN (Sticky Booking Widget) */}
@@ -503,12 +460,22 @@ const PujaDetails = () => {
                                 <span className="text-2xl font-bold text-gray-900">₹{pujas?.packages.find(p => p.id === selectedPackage)?.price}</span>
                             </div>
 
+                           
+
                             <button
-                                onClick={() => navigate(`/puja/book/${id}?pkg=${selectedPackage}`)}
-                                className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-300 transform hover:-translate-y-1 transition-all"
-                            >
-                                Book Now
-                            </button>
+  disabled={bookingClosed}
+  onClick={() =>
+    !bookingClosed && navigate(`/puja/book/${slug}?pkg=${selectedPackage}`)
+  }
+  className={`w-full py-4 rounded-xl font-bold transition-all
+  ${
+    bookingClosed
+      ? 'bg-gray-400 cursor-not-allowed'
+      : 'bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-300 transform hover:-translate-y-1 transition-all'
+  }`}
+>
+  {bookingClosed ? 'Booking Closed' : 'Book Now'}
+</button>
 
                             <div className="mt-6 flex items-center justify-center gap-2 text-xs text-gray-400">
                                 <FaCheckCircle className="text-green-500" />
@@ -535,12 +502,20 @@ const PujaDetails = () => {
                             <span className="text-xs text-gray-400 line-through">₹{Math.round(pujas?.packages.find(p => p.id === selectedPackage)?.price * 1.2)}</span>
                         </div>
                     </div>
-                    <button
-                        onClick={() => navigate(`/puja/book/${id}?pkg=${selectedPackage}`)}
-                        className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-orange-200 active:scale-95 transition-transform flex items-center justify-center gap-2"
-                    >
-                        Book Now <FaChevronRight size={12} />
-                    </button>
+                   <button
+  disabled={bookingClosed}
+  onClick={() =>
+    !bookingClosed && navigate(`/puja/book/${slug}?pkg=${selectedPackage}`)
+  }
+  className={`w-full py-4 rounded-xl font-bold transition-all
+  ${
+    bookingClosed
+      ? 'bg-gray-400 cursor-not-allowed'
+      : 'bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 rounded-xl font-bold shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-300 transform hover:-translate-y-1 transition-all'
+  }`}
+>
+  {bookingClosed ? 'Booking Closed' : 'Book Now'}
+</button>
                 </div>
             </div>
 

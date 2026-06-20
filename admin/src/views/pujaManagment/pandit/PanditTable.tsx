@@ -17,37 +17,28 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ComonDeletemodal from 'src/utils/deletemodal/ComonDeletemodal';
 import { toast } from 'react-toastify';
 import { imageUrl } from 'src/constants/contant';
-import CreatePackage from './CreatePackage';
-import EditPackage from './EditPackage';
-import { deletePujaPackage } from 'src/features/pujamanagment/PujaPackageSlice';
-import BreadcrumbComp from 'src/layouts/full/shared/breadcrumb/BreadcrumbComp';
-import CardBox from 'src/components/shared/CardBox';
-import { getPujaWithSlug } from 'src/features/pujamanagment/PujaSlice';
-import { useParams } from 'react-router';
+import CreatePackage from './Create';
+import EditPackage from './Edit';
+import { deletePandit, getPandit } from 'src/features/pujamanagment/PanditSlice';
 
 export interface PaginationTableType {
   id: number;
   name: string;
   price: string;
-  persons: string;
+  puja_name: string;
   image: string;
-  description: string;
+  exprience: string;
+  language: string;
 }
 
 const columnHelper = createColumnHelper<PaginationTableType>();
 
 function PujaPackageTable() {
-  const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
-  const puja = useSelector((state: RootState) => state.puja.single) as any;
-
-  useEffect(() => {
-    dispatch(getPujaWithSlug(id));
-  }, [id]);
 
   const [selectedRow, setSelectedRow] = useState<PaginationTableType | null>(null);
 
-  const packages = useSelector((state: RootState) => state.pujaPackage.packages) as any;
+  const { pandits } = useSelector((state: RootState) => state.pandit) as any;
 
   const [searchText, setSearchText] = useState('');
 
@@ -59,10 +50,14 @@ function PujaPackageTable() {
     delete: false,
   });
 
+  useEffect(() => {
+    dispatch(getPandit());
+  }, [dispatch]);
+
   const handleDelete = (row) => {
     const id = row?.id;
-    dispatch(deletePujaPackage(id));
-    toast.success('Puja Package deleted successfully');
+    dispatch(deletePandit(id));
+    toast.success('Pandit deleted successfully');
   };
 
   const handleModal = (type: keyof typeof modals, value: boolean, row?: PaginationTableType) => {
@@ -71,12 +66,12 @@ function PujaPackageTable() {
   };
 
   const filteredData = useMemo(() => {
-    if (!searchText) return packages;
+    if (!searchText) return pandits;
 
-    return packages.filter((item: any) =>
+    return pandits.filter((item: any) =>
       item?.name?.toLowerCase().includes(searchText.toLowerCase()),
     );
-  }, [packages, searchText]);
+  }, [pandits, searchText]);
 
   const columns = [
     columnHelper.accessor('name', {
@@ -88,14 +83,21 @@ function PujaPackageTable() {
           </div>
         );
       },
-      header: () => <span className="text-base">Name</span>,
+      header: () => <span className="text-base">Pandit Name</span>,
     }),
-    columnHelper.accessor('persons', {
+    columnHelper.accessor('puja_name', {
       cell: (info) => {
         const rowData = info.row.original;
-        return <p className="text">{rowData?.persons || '-'}</p>;
+        return <p className="text">{rowData?.puja_name || '-'}</p>;
       },
-      header: () => <span className="text-base">Person</span>,
+      header: () => <span className="text-base">Puja Name</span>,
+    }),
+    columnHelper.accessor('exprience', {
+      cell: (info) => {
+        const rowData = info.row.original;
+        return <p className="text">{rowData?.exprience || '-'} years</p>;
+      },
+      header: () => <span className="text-base">Exprience</span>,
     }),
     columnHelper.accessor('price', {
       cell: (info) => {
@@ -104,20 +106,12 @@ function PujaPackageTable() {
       },
       header: () => <span className="text-base">Price</span>,
     }),
-    columnHelper.accessor('description', {
+    columnHelper.accessor('language', {
       cell: (info) => {
         const rowData = info.row.original;
-
-        return (
-          <div
-            className="text"
-            dangerouslySetInnerHTML={{
-              __html: rowData?.description || '-',
-            }}
-          />
-        );
+        return <p className="text">{rowData?.language || '-'}</p>;
       },
-      header: () => <span className="text-base">Description</span>,
+      header: () => <span className="text-base">Language</span>,
     }),
 
     columnHelper.accessor('image', {
@@ -131,7 +125,7 @@ function PujaPackageTable() {
 
         return (
           <img
-            src={`${imageUrl}/packages/${image}`}
+            src={`${imageUrl}/pandit/${image}`}
             alt="puja"
             className="h-12 w-12 object-cover rounded-md border"
           />
@@ -184,52 +178,46 @@ function PujaPackageTable() {
 
   return (
     <>
-      <BreadcrumbComp
-        items={[{ title: `${puja?.puja_name}`, to: '/' }]}
-        title={`${puja?.puja_name}`}
-      />
-      <CardBox>
-        <div className="p-4 flex justify-between items-center">
-          <input
-            type="text"
-            placeholder="Search package..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            className="p-2 border rounded-md border-gray-300"
-          />
+      <div className="p-4 flex justify-between items-center">
+        <input
+          type="text"
+          placeholder="Search Pandit..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="p-2 border rounded-md border-gray-300"
+        />
 
-          <Button color="primary" onClick={() => handleModal('add', true)}>
-            ✨ Create Package
-          </Button>
-        </div>
+        <Button color="primary" onClick={() => handleModal('add', true)}>
+          ✨ Create Pandit
+        </Button>
+      </div>
 
-        <div className="w-full overflow-x-auto">
-          <TableComponent table={table} flexRender={flexRender} columns={columns} />
-        </div>
+      <div className="w-full overflow-x-auto">
+        <TableComponent table={table} flexRender={flexRender} columns={columns} />
+      </div>
 
-        <PaginationComponent table={table} />
-        {modals.add && (
-          <CreatePackage openModal={modals.add} setOpenModal={() => handleModal('add', false)} />
-        )}
+      <PaginationComponent table={table} />
+      {modals.add && (
+        <CreatePackage openModal={modals.add} setOpenModal={() => handleModal('add', false)} />
+      )}
 
-        {modals.edit && (
-          <EditPackage
-            openModal={modals.edit}
-            setOpenModal={() => handleModal('edit', false)}
-            row={selectedRow}
-          />
-        )}
+      {modals.edit && (
+        <EditPackage
+          openModal={modals.edit}
+          setOpenModal={() => handleModal('edit', false)}
+          row={selectedRow}
+        />
+      )}
 
-        {modals.delete && (
-          <ComonDeletemodal
-            isOpen={modals.delete}
-            setIsOpen={() => handleModal('delete', false)}
-            selectedUser={selectedRow}
-            title="Are you sure you want to delete this puja package?"
-            handleConfirmDelete={handleDelete}
-          />
-        )}
-      </CardBox>
+      {modals.delete && (
+        <ComonDeletemodal
+          isOpen={modals.delete}
+          setIsOpen={() => handleModal('delete', false)}
+          selectedUser={selectedRow}
+          title="Are you sure you want to delete this pandit?"
+          handleConfirmDelete={handleDelete}
+        />
+      )}
     </>
   );
 }

@@ -11,6 +11,9 @@ import { useLanguage } from '../../context/LanguageContext';
 import SafeImage from '../../components/common/SafeImage';
 import { useDispatch, useSelector } from 'react-redux';
 import {  getProductWithSlug } from '../../features/shop/ProductSlice';
+import { getReviews } from '../../features/home/HomeSlice';
+import { getTypeIcon } from '../../components/TypeIcon';
+import { formatDate } from '../../components/datetimer/date';
 
 /* ─── Accordion (mobile) ─── */
 const AccordionItem = ({ title, children, isOpen, onClick, icon: Icon }) => (
@@ -62,9 +65,13 @@ const ProductDetail = () => {
     const products = data?.product;
     const product_name = products?.product_name;
     const gallery = products?.gallery.length > 0  ? JSON.parse(products?.gallery) : [] ;
+    const  { reviews }  = useSelector((state) => state.home) || [];
+    
 
     useEffect(() => {
     dispatch(getProductWithSlug(slug))
+    dispatch(getReviews('shop'))
+
     },[dispatch])
 
 
@@ -72,11 +79,12 @@ const ProductDetail = () => {
     const features = ['Premium quality materials', 'Traditional craftsmanship', 'Perfect for home temples', 'Ideal for gifting', 'Authentic design', 'Carefully packaged'];
     const  specifications = { 'Material': 'Premium Quality', 'Origin': 'India', 'Weight': 'Varies by size', 'Dimensions': 'Standard Size', 'Care': 'Gentle cleaning recommended', 'Warranty': '30 days return policy' }
 
-    const customerReviews = [
-        { id: 1, name: isHindi ? 'राहुल शर्मा' : 'Rahul Sharma', rating: 5, date: '2024-01-10', comment: isHindi ? 'बिल्कुल सुंदर! गुणवत्ता मेरी उम्मीदों से अधिक थी।' : 'Absolutely beautiful! The quality exceeded my expectations. Perfect for my home temple.', verified: true },
-        { id: 2, name: isHindi ? 'प्रिया पटेल' : 'Priya Patel', rating: 4, date: '2024-01-08', comment: isHindi ? 'शानदार उत्पाद और तेज़ डिलीवरी।' : 'Great product and fast delivery. Very happy with my purchase.', verified: true },
-        { id: 3, name: isHindi ? 'अमित कुमार' : 'Amit Kumar', rating: 5, date: '2024-01-05', comment: isHindi ? 'उत्कृष्ट शिल्प कौशल और प्रामाणिक डिजाइन।' : 'Excellent craftsmanship and authentic design. Highly recommended!', verified: false }
-    ];
+    // const reviews = [
+    //     { id: 1, name: isHindi ? 'राहुल शर्मा' : 'Rahul Sharma', rating: 5, date: '2024-01-10', comment: isHindi ? 'बिल्कुल सुंदर! गुणवत्ता मेरी उम्मीदों से अधिक थी।' : 'Absolutely beautiful! The quality exceeded my expectations. Perfect for my home temple.', verified: true },
+    //     { id: 2, name: isHindi ? 'प्रिया पटेल' : 'Priya Patel', rating: 4, date: '2024-01-08', comment: isHindi ? 'शानदार उत्पाद और तेज़ डिलीवरी।' : 'Great product and fast delivery. Very happy with my purchase.', verified: true },
+    //     { id: 3, name: isHindi ? 'अमित कुमार' : 'Amit Kumar', rating: 5, date: '2024-01-05', comment: isHindi ? 'उत्कृष्ट शिल्प कौशल और प्रामाणिक डिजाइन।' : 'Excellent craftsmanship and authentic design. Highly recommended!', verified: false }
+    // ];
+
 
 
     const handleAddToCart = () => {
@@ -183,7 +191,7 @@ const ProductDetail = () => {
                     <div className="flex items-center gap-2 mb-4">
                         <div className="flex items-center gap-0.5">
                             {[...Array(5)].map((_, i) => (
-                                <FaStar key={i} className={`text-sm ${i < Math.floor(products?.rating) ? 'text-yellow-500' : 'text-gray-300'}`} />
+                                <FaStar key={i} className={`text-sm ${i < 4 ? 'text-yellow-500' : 'text-gray-300'}`} />
                             ))}
                         </div>
                         <span className="text-sm font-semibold text-gray-900">{products?.rating}</span>
@@ -276,36 +284,37 @@ const ProductDetail = () => {
                     </AccordionItem>
 
                     <AccordionItem
-                        title={`${isHindi ? 'समीक्षाएं' : 'Reviews'} (${customerReviews.length})`}
+                        title={`${isHindi ? 'समीक्षाएं' : 'Reviews'} (${reviews?.length})`}
                         icon={FaComments}
                         isOpen={expandedAccordion === 'reviews'}
                         onClick={() => setExpandedAccordion(expandedAccordion === 'reviews' ? null : 'reviews')}
                     >
                         <div className="space-y-4">
-                            {customerReviews.map((review) => (
+                            {reviews?.map((review) => (
                                 <div key={review.id} className="bg-gray-50 p-4 rounded-xl">
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center gap-2">
                                             <div className="w-8 h-8 bg-[#e14503]/10 rounded-full flex items-center justify-center">
-                                                <span className="text-[#e14503] font-bold text-sm">{review.name.charAt(0)}</span>
+                                                         {getTypeIcon(review?.type)}
+
                                             </div>
                                             <div>
-                                                <h4 className="text-sm font-bold text-gray-900">{review.name}</h4>
-                                                {review.verified && (
+                                                <h4 className="text-sm font-bold text-gray-900">{review?.title}</h4>
+                                                
                                                     <span className="text-[10px] text-green-600 font-semibold flex items-center gap-1">
                                                         <FaCheckCircle size={8} /> {isHindi ? 'सत्यापित' : 'Verified'}
                                                     </span>
-                                                )}
+                                                
                                             </div>
                                         </div>
-                                        <span className="text-xs text-gray-400">{review.date}</span>
+                                        <span className="text-xs text-gray-400">{formatDate(review?.created_at)}</span>
                                     </div>
                                     <div className="flex gap-0.5 mb-2">
                                         {[...Array(5)].map((_, i) => (
-                                            <FaStar key={i} className={`text-xs ${i < review.rating ? 'text-yellow-500' : 'text-gray-300'}`} />
+                                            <FaStar key={i} className={`text-xs ${i < 5 ? 'text-yellow-500' : 'text-gray-300'}`} />
                                         ))}
                                     </div>
-                                    <p className="text-sm text-gray-600 leading-relaxed">{review.comment}</p>
+                                    <p className="text-sm text-gray-600 leading-relaxed">{review.description}</p>
                                 </div>
                             ))}
                         </div>
@@ -331,7 +340,7 @@ const ProductDetail = () => {
                                         <span className="text-base font-bold text-gray-900">₹{relProduct.price}</span>
                                         <div className="flex items-center gap-0.5">
                                             <FaStar className="text-yellow-500 text-xs" />
-                                            <span className="text-xs font-semibold text-gray-700">{relProduct.rating}</span>
+                                            <span className="text-xs font-semibold text-gray-700">{5}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -519,7 +528,7 @@ const ProductDetail = () => {
                             {[
                                 { key: 'features', label: isHindi ? 'मुख्य विशेषताएं' : 'Key Features', icon: FaListUl },
                                 { key: 'specs', label: isHindi ? 'विशेष विवरण' : 'Specifications', icon: FaCogs },
-                                { key: 'reviews', label: `${isHindi ? 'समीक्षाएं' : 'Reviews'} (${customerReviews.length})`, icon: FaComments }
+                                { key: 'reviews', label: `${isHindi ? 'समीक्षाएं' : 'Reviews'} (${reviews?.length})`, icon: FaComments }
                             ].map(tab => (
                                 <button
                                     key={tab.key}
@@ -558,32 +567,33 @@ const ProductDetail = () => {
                             )}
                             {activeTab === 'reviews' && (
                                 <div className="space-y-6 max-w-3xl">
-                                    {customerReviews.map((review) => (
+                                    {reviews?.map((review) => (
                                         <div key={review.id} className="pb-6 border-b border-gray-100 last:border-0">
                                             <div className="flex items-start justify-between mb-3">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-10 h-10 bg-[#e14503]/10 rounded-full flex items-center justify-center">
-                                                        <span className="text-[#e14503] font-bold">{review.name.charAt(0)}</span>
+                                                    {getTypeIcon(review?.type)}
+                                                        
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <h4 className="font-bold text-gray-900">{review.name}</h4>
-                                                            {review.verified && (
+                                                            <h4 className="font-bold text-gray-900">{review?.title}</h4>
+                                                            
                                                                 <span className="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full font-semibold">
                                                                     {isHindi ? 'सत्यापित खरीद' : 'Verified Purchase'}
                                                                 </span>
-                                                            )}
+                                                            
                                                         </div>
                                                         <div className="flex items-center gap-1">
                                                             {[...Array(5)].map((_, i) => (
-                                                                <FaStar key={i} className={`text-sm ${i < review.rating ? 'text-yellow-500' : 'text-gray-300'}`} />
+                                                                <FaStar key={i} className={`text-sm ${i < 5 ? 'text-yellow-500' : 'text-gray-300'}`} />
                                                             ))}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span className="text-sm text-gray-400">{review.date}</span>
+                                                <span className="text-sm text-gray-400">{formatDate(review.created_at)}</span>
                                             </div>
-                                            <p className="text-gray-700 leading-relaxed ml-[52px]">{review.comment}</p>
+                                            <p className="text-gray-700 leading-relaxed ml-[52px]">{review.description}</p>
                                         </div>
                                     ))}
                                 </div>

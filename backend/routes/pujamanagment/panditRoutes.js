@@ -2,19 +2,21 @@ const express = require("express");
 const router = express.Router();
 const upload = require("../../middleware/upload");
 
-const PujaPackageController = require("../../controllers/pujamanagment/PujaPackageController");
+const PanditController = require("../../controllers/pujamanagment/PanditController");
 
 router.post(
   "/create",
   upload.fields([{ name: "image", maxCount: 1 }]),
-  PujaPackageController.create
+  PanditController.create
 );
-router.get("/find/:id", PujaPackageController.getPujaPackage);
-router.delete("/delete/:id", PujaPackageController.deletePujaPackage);
+
+router.get("/find", PanditController.getPandits);
+router.delete("/delete/:id", PanditController.deletePandit);
+
 router.put(
   "/update/:id",
   upload.fields([{ name: "image", maxCount: 1 }]),
-  PujaPackageController.update
+  PanditController.update
 );
 
 module.exports = router;

@@ -13,8 +13,6 @@ const OrderSummary = ({ items, onPlaceOrder, isMobile = false }) => {
     const tax = subtotal * 0.1;
     const total = subtotal + shipping + tax;
 
-
-
     return (
         <div
             className={`bg-white ${

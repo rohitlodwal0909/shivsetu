@@ -13,6 +13,59 @@ const initialState = {
 
 /* ================= CREATE ORDER ================= */
 
+
+
+export const rezorpay = createAsyncThunk(
+  "order/rezorpay",
+  async (orderData, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${API_BASE_URL}/order/create-order`,
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Order creation failed"
+      );
+    }
+  }
+);
+
+
+export const verifyPayment = createAsyncThunk(
+  "order/verifyPayment",
+  async (orderData, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${API_BASE_URL}/order/verify-payment`,
+        orderData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Order creation failed"
+      );
+    }
+  }
+);
+
 export const createOrder = createAsyncThunk(
   "order/create",
   async (orderData, { rejectWithValue }) => {
@@ -88,6 +141,33 @@ const orderSlice = createSlice({
         state.orders.unshift(action.payload);
       })
       .addCase(createOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(rezorpay.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(rezorpay.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleOrder = action.payload;
+      })
+      .addCase(rezorpay.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
+       .addCase(verifyPayment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(verifyPayment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleOrder = action.payload;
+      })
+      .addCase(verifyPayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

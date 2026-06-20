@@ -10,11 +10,13 @@ import { toast } from 'react-toastify';
 const SideProfile = () => {
   const { setIsCollapse, isCollapse } = useContext(CustomizerContext);
   const navigate = useNavigate();
+
   const handlelogout = () => {
-    localStorage.removeItem('logincheck');
+    localStorage.removeItem('token');
     toast.success('Logout ');
     navigate('/admin/login');
   };
+
   return (
     <>
       <div className="relative group/menu">

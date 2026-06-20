@@ -52,18 +52,18 @@ const SidebarContent: MenuItem[] = [
           url: "/puja-management/pujas",
         },
       
-        // {
-        //   id: uniqueId(),
-        //   name: "Bookings",
-        //   icon: "ph:calendar-check-thin",
-        //   url: "/puja-management/bookings",
-        // },
-        // {
-        //   id: uniqueId(),
-        //   name: "Pandit Management",
-        //   icon: "ph:user-thin",
-        //   url: "/puja-management/pandits",
-        // },
+        {
+          id: uniqueId(),
+          name: "Bookings",
+          icon: "ph:calendar-check-thin",
+          url: "/puja-management/bookings",
+        },
+        {
+          id: uniqueId(),
+          name: "Pandit Management",
+          icon: "ph:user-thin",
+          url: "/puja-management/pandits",
+        },
         // {
         //   id: uniqueId(),
         //   name: "Prasad Dispatch",

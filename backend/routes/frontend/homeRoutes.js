@@ -11,4 +11,6 @@ router.get("/singletour/:id", HomeController.singleTour);
 router.get("/cabs", HomeController.getCabs);
 router.get("/singlecab/:id", HomeController.singlecab);
 
+router.get("/get-reviews/:type", HomeController.getReviews);
+
 module.exports = router;

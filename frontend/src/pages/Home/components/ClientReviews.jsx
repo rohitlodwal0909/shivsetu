@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { FaStar, FaQuoteLeft } from 'react-icons/fa';
-import SafeImage from '../../../components/common/SafeImage';
-import { GiTempleGate, GiPrayerBeads, GiMeditation, GiLotus } from 'react-icons/gi';
-import { FaCar } from 'react-icons/fa';
+
+import { getTypeIcon } from '../../../components/TypeIcon';
 
 const timeAgo = (dateString) => {
   const now = new Date();
@@ -29,20 +28,6 @@ const timeAgo = (dateString) => {
   return 'just now';
 };
 
-const getTypeIcon = (type) => {
-  switch (type) {
-    case 'shop':
-      return <GiTempleGate className="text-orange-500 text-xl" />; 
-    case 'puja':
-      return <GiPrayerBeads className="text-yellow-500 text-xl" />; 
-    case 'tour':
-      return <GiMeditation className="text-purple-500 text-xl" />; 
-    case 'cab':
-      return <FaCar className="text-green-500 text-xl" />; 
-    default:
-      return <GiLotus className="text-pink-500 text-xl" />; // 🌸 fallback lotus
-  }
-};
 
 const ClientReviews = ({reviews = []}) => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -99,12 +84,8 @@ const ClientReviews = ({reviews = []}) => {
                             <div className="p-6">
                                 <p className="text-gray-700 mb-6 leading-relaxed text-base">"{review.description}"</p>
                                 <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                                    <SafeImage
-                                        src={review.image}
-                                        alt={review.name}
-                                        className="w-12 h-12 rounded-full object-cover"
-                                        fallbackSrc="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop"
-                                    />
+                                     {getTypeIcon(review.type)}
+
                                     <div className="flex-1">
                                         <h4 className="text-gray-900 font-bold">{review.title}</h4>
                                         {/* <p className="text-gray-600 text-sm">{review.role}</p> */}

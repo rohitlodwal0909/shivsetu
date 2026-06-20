@@ -6,11 +6,13 @@ import { FaUserEdit, FaFileInvoice, FaCreditCard } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { bookPuja } from '../../../features/puja/PujaSlice';
 import { useDispatch } from 'react-redux';
+import { rezorpay, verifyPayment } from '../../../features/order/OrderSlice';
 
 const BookingStepper = ({ pujaDetails, serviceType = 'puja' }) => {
 
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState(null);
+
     const dispatch = useDispatch();
 
 
@@ -23,20 +25,74 @@ const BookingStepper = ({ pujaDetails, serviceType = 'puja' }) => {
         setCurrentStep(prev => prev - 1);
     };
 
-    const handlePayment = async () => {
+   const handlePayment = async () => {
 
-                const updatedData = {
-                ...bookingData,
-                amount: pujaDetails?.price,
-                puja_package_id: pujaDetails?.id
+  try {
+
+    /* ✅ Create Razorpay Order */
+    const orderRes = await dispatch(
+      rezorpay({ amount: pujaDetails?.price })
+    ).unwrap();
+
+    const options = {
+      key: "rzp_test_SeT5kdlBivmvHn",
+
+      amount: orderRes.amount,
+      order_id: orderRes.id, 
+
+      name: "ShivSetu Puja Booking",
+      image: "https://shivsetu.com/uploads/logo/logo.svg",
+
+      theme: {
+        color: "#e14503",
+      },
+
+      handler: async function (response) {
+
+        try {
+
+          /* ✅ Verify Payment */
+          const verify = await dispatch(
+            verifyPayment(response)
+          ).unwrap();
+
+          if (verify.success) {
+
+            const updatedData = {
+              ...bookingData,
+              amount: pujaDetails?.price,
+              puja_package_id: pujaDetails?.id,
+              payment_id: response.razorpay_payment_id,
+              payment_status: "paid",
             };
 
-        setBookingData(updatedData);
+            setBookingData(updatedData);
 
-       await dispatch(bookPuja(updatedData));
+            await dispatch(bookPuja(updatedData));
 
-        setCurrentStep(3);
+            setCurrentStep(3);
+          }
+
+        } catch (err) {
+          console.error(err);
+        }
+      },
+
+      modal: {
+        ondismiss: () => {
+          alert("Payment Cancelled 🙏");
+        },
+      },
     };
+
+    /* ✅ OPEN RAZORPAY */
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (error) {
+    console.error(error);
+  }
+};
 
     const steps = [
         { id: 1, name: "Sankalp", icon: FaUserEdit },

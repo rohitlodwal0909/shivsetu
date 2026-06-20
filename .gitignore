@@ -10,6 +10,9 @@ build/
 .env.local
 .env.production
 
+backend/uploads/*
+!backend/uploads/.gitkeep
+
 # logs
 logs
 *.log

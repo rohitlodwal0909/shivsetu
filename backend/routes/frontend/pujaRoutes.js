@@ -7,4 +7,6 @@ router.get("/get-puja", PujaController.getPuja);
 router.get("/get-puja-details/:slug", PujaController.getPujaDetails);
 router.post("/book", PujaController.bookPuja);
 
+//  Pandits
+
 module.exports = router;

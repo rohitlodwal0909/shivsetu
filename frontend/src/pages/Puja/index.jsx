@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import PujaCard from './components/PujaCard';
 import MobilePujaCard from './components/MobilePujaCard';
@@ -24,20 +23,19 @@ const Puja = () => {
         dispatch(getPuja());
     }, [dispatch]);
 
-    const navigate = useNavigate();
 
     const [activeFilter, setActiveFilter] = useState('All');
     const [priceSort, setPriceSort] = useState('default');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
 
-const filters = [
-  { id: 'All', label: 'All' },
-  ...category.map((cat) => ({
-      id: cat.id,
-      label: cat.name
-  }))
-];
+        const filters = [
+        { id: 'All', label: 'All' },
+        ...category.map((cat) => ({
+            id: cat.id,
+            label: cat.name
+        }))
+        ];
 
     // Filter logic
         const filteredPujas = allpuja.filter((puja) => {

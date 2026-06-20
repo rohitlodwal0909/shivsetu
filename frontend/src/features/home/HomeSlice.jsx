@@ -8,6 +8,7 @@ const initialState = {
   loading: false,
   error: null,
   marquee: null,
+  reviews: null,
   tours: null,
   singletour: null,
   singlecab: null,
@@ -115,6 +116,22 @@ export const getHomedata = createAsyncThunk(
   },
 );
 
+export const getReviews = createAsyncThunk(
+  'home/reviews',
+  async (type, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/home/get-reviews/${type}`,
+      );
+      return response.data.reviews;
+    } catch (err) {
+      return rejectWithValue(
+            err.response?.data?.message || 'Home data fetch failed',
+        );
+    }
+  },
+);
+
 /* ================= SLICE ================= */
 
 const HomeSlice = createSlice({
@@ -137,6 +154,22 @@ const HomeSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+
+      .addCase(getReviews.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getReviews.fulfilled, (state, action) => {
+        state.loading = false;
+        state.reviews = action.payload;
+      })
+      .addCase(getReviews.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
+      
 
       .addCase(getTours.pending, (state) => {
         state.loading = true;

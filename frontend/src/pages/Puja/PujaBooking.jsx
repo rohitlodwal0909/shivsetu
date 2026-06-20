@@ -106,7 +106,7 @@ const PujaBooking = () => {
                                         <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-500"><FaClock size={14} /></div>
                                         <div>
                                             <p className="text-xs text-gray-400">Time</p>
-                                            <p className="font-semibold text-gray-800">{ "8:PM"}</p>
+                                            <p className="font-semibold text-gray-800">{ "10:AM"}</p>
                                         </div>
                                     </div>
                                 </div>

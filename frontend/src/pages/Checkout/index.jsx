@@ -9,7 +9,7 @@ import { useToast } from '../../context/ToastContext';
 import { FaShoppingBag, FaChevronLeft, FaLock, FaCheck } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useDispatch } from 'react-redux';
-import { createOrder } from '../../features/order/OrderSlice';
+import { createOrder, rezorpay, verifyPayment } from '../../features/order/OrderSlice';
 
 const Checkout = () => {
     const { user } = useAuth();
@@ -54,7 +54,7 @@ const Checkout = () => {
     }
 }, [user]);
 
-    const [paymentMethod, setPaymentMethod] = useState('card');
+    const [paymentMethod, setPaymentMethod] = useState('cod');
     const [errors, setErrors] = useState({});
 
     const handleFormChange = (field, value) => {
@@ -87,7 +87,9 @@ const Checkout = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+
 const handlePlaceOrder = async () => {
+
     if (!validateForm()) {
         setActiveStep(0);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -100,28 +102,36 @@ const handlePlaceOrder = async () => {
     const tax = subtotal * 0.1;
     const total = (subtotal + shipping + tax).toFixed(2);
 
-    const orderNumber = `ORD-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)
-        .toString()
-        .padStart(4, '0')}`;
+    const orderNumber = `ORD-${new Date().getFullYear()}-${Math.floor(Math.random()*10000)}`;
 
     const orderData = {
         order_number: orderNumber,
         user_id: user?.id,
         items: cartItems,
         shipping_address: {
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        zip_code: formData.zipCode,
-    },
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zip_code: formData.zipCode,
+        },
         payment_method: paymentMethod,
         total_amount: total,
     };
 
     try {
-        const result = await dispatch(createOrder(orderData)).unwrap();
 
-        setOrderDetails({
+        /* ===========================
+           ✅ CASH ON DELIVERY
+        =========================== */
+
+        if (paymentMethod === "cod") {
+
+            await dispatch(createOrder(orderData)).unwrap();
+
+            clearCart();
+            setShowConfirmation(true);
+
+            setOrderDetails({
             orderNumber,
             customerName: `${formData.firstName} ${formData.lastName}`,
             email: formData.email,
@@ -129,15 +139,81 @@ const handlePlaceOrder = async () => {
             items: cartItems
         });
 
-        clearCart();
-        setShowConfirmation(true);
-        showToast("Order placed successfully", { type: "success" });
+            showToast("Order placed (Cash on Delivery)", {
+                type: "success",
+            });
+
+            return;
+        }
+
+
+          const orderRes = await dispatch(rezorpay({ amount: total })).unwrap()
+    
+            const options = {
+            key: "rzp_live_Su492E39EURd6h",
+            amount: orderRes.amount,
+            currency: "INR",
+            order_id: orderRes.id,
+            name: "ShivSetu.com",
+            image: "https://shivsetu.com/uploads/logo/logo.svg",
+            theme: {
+                color: "#e14503"
+            },
+
+            handler: async function (response) {
+            const verify = await dispatch(verifyPayment(response)).unwrap();
+
+                if (verify.success) {
+                    await dispatch(createOrder({
+                        ...orderData,
+                        payment_id: response.razorpay_payment_id,
+                        payment_status: "paid"
+                    })).unwrap();
+
+                    clearCart();
+                    setShowConfirmation(true);
+
+                        setOrderDetails({
+                        orderNumber,
+                        customerName: `${formData.firstName} ${formData.lastName}`,
+                        email: formData.email,
+                        total,
+                        items: cartItems
+                    });
+
+                    showToast("Payment Successful & Order Placed", {
+                        type: "success",
+                    });
+
+                } else {
+                    showToast("Payment verification failed", {
+                        type: "error",
+                    });
+                }
+            },
+
+            modal: {
+                ondismiss: () => {
+                    showToast("Payment Cancelled", { type: "error" });
+                }
+            }
+        };
+
+                    if (!window.Razorpay) {
+                showToast("Razorpay SDK failed to load", {
+                    type: "error",
+                });
+                return;
+            }
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
 
     } catch (error) {
-        showToast(error || "Order failed", { type: "error" });
+        console.error(error);
+        showToast("Order failed", { type: "error" });
     }
 };
-
     const handleNextStep = () => {
         if (activeStep === 0) {
             if (!validateForm()) {

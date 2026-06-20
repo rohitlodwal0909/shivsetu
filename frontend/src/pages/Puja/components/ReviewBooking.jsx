@@ -52,7 +52,7 @@ const ReviewBooking = ({ formData, onBack, onConfirm }) => {
                     </div>
                     <div>
                         <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wide">{isHindi ? "संपर्क" : "Contact"}</p>
-                        <p className="font-bold text-gray-800 text-sm">{formData.whatsapp}</p>
+                        <p className="font-bold text-gray-800 text-sm">{formData.mobile_no}</p>
                     </div>
                 </motion.div>
 

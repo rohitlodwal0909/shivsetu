@@ -193,3 +193,25 @@ exports.singlecab = async (req, res) => {
     });
   }
 };
+
+exports.getReviews = async (req, res) => {
+  try {
+    const type = req.params.type;
+    const reviews = await ClientReview.findAll({
+      where: { type: type },
+      order: [["created_at", "DESC"]]
+    });
+
+    return res.status(200).json({
+      success: true,
+      reviews
+    });
+  } catch (error) {
+    console.error("MYSQL ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "reviews fetch failed",
+      error: error.original?.message || error.message
+    });
+  }
+};

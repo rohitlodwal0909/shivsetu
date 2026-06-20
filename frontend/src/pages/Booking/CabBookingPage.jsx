@@ -7,45 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { singleCab } from '../../features/home/HomeSlice';
 import { IMAGE_URL } from '../../utils/constants';
 
-// Cab data
-// const cabs = [
-//     {
-//         id: 1,
-//         name: 'Swift Dzire / Etios',
-//         image: '/Images/Cabs/Dzire.webp',
-//         seating: '4+1',
-//         rate: 'Rs 12/KM',
-//         price: '12',
-//         features: ['AC Sedan', 'Clean Interiors', 'Professional Driver', 'City & Outstation'],
-//     },
-//     {
-//         id: 2,
-//         name: 'Toyota Innova Crysta',
-//         image: '/Images/Cabs/Innova.webp',
-//         seating: '6+1',
-//         rate: 'Rs 18/KM',
-//         price: '18',
-//         features: ['AC SUV', 'Premium Comfort', 'Ample Legroom', 'Family Trips'],
-//     },
-//     {
-//         id: 3,
-//         name: 'Maruti Suzuki Ertiga',
-//         image: '/Images/Cabs/Ertiga.webp',
-//         seating: '6+1',
-//         rate: 'Rs 15/KM',
-//         price: '15',
-//         features: ['AC SUV', 'Music System', 'Economical Group Travel', 'Verified Drivers'],
-//     },
-//     {
-//         id: 4,
-//         name: 'Tempo Traveller',
-//         image: '/Images/Cabs/Tempo.webp',
-//         seating: '12-17',
-//         rate: 'Rs 25/KM',
-//         price: '25',
-//         features: ['Luxury Seating', 'Group Tours', 'Ideal for Pilgrimage', 'Pushback Seats'],
-//     },
-// ];
 
 
 const CabBookingPage = () => {
@@ -60,7 +21,7 @@ const CabBookingPage = () => {
     dispatch(singleCab(id)).unwrap();
     },[id])
 
-      const features =['AC Sedan', 'Clean Interiors', 'Professional Driver', 'City & Outstation'];
+      const features = ['AC Sedan', 'Clean Interiors', 'Professional Driver', 'City & Outstation'];
 
 
     useEffect(() => {

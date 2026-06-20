@@ -7,12 +7,14 @@ import ProductSlice from '../src/features/productmanagment/ProductSlice';
 import PujaCategorySlice from '../src/features/pujamanagment/PujaCategorySlice';
 import PujaSlice from '../src/features/pujamanagment/PujaSlice';
 import PujaPackageSlice from '../src/features/pujamanagment/PujaPackageSlice';
+import PanditSlice from '../src/features/pujamanagment/PanditSlice';
 import CabSlice from '../src/features/tourmanagment/CabSlice';
 import SliderSlice from '../src/features/homemanagment/SliderSlice';
 import MarqueeSlice from '../src/features/homemanagment/MarqueeSlice';
 import BlogSlice from '../src/features/homemanagment/BlogSlice';
 import ReviewSlice from '../src/features/homemanagment/ReviewSlice';
 import OrderSlice from '../src/features/productmanagment/OrderSlice';
+import BookingSlice from '../src/features/pujamanagment/BookingSlice';
 
 export const store = configureStore({
   reducer: {
@@ -30,6 +32,8 @@ export const store = configureStore({
     marquee: MarqueeSlice,
     blog: BlogSlice,
     review: ReviewSlice,
+    pandit: PanditSlice,
+    pujabooking: BookingSlice,
   },
 });
 

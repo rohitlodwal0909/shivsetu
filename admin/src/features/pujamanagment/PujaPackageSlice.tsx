@@ -60,9 +60,9 @@ export const createPujaPackage = createAsyncThunk<PujaPackage, FormData, { rejec
 // GET ALL
 export const getPujaPackages = createAsyncThunk<PujaPackage[], void, { rejectValue: string }>(
   'pujaPackage/getAll',
-  async (_, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get('/puja/package/find');
+      const response = await axiosInstance.get('/puja/package/find/' + id);
       return response.data.data;
     } catch (err) {
       const error = err as AxiosError<any>;

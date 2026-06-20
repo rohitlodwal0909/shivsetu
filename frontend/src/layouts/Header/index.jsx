@@ -31,6 +31,7 @@ const Header = ({ onToggleChat }) => {
     const cartCount = getCartCount();
     const wishlistCount = getWishlistCount();
 
+
     // Helper to close all sheets
     const closeAllSheets = () => {
         setIsServicesOpen(false);
@@ -121,6 +122,17 @@ const Header = ({ onToggleChat }) => {
             setSearchQuery('');
         }
     };
+
+    
+    const handleCheckout = () => {
+
+        if(user){
+        navigate("/checkout");
+        }else{
+        navigate("/login");
+        }
+        setIsCartOpen(false)
+    }
 
     return (
         <header className="header-wrapper">
@@ -504,13 +516,14 @@ const Header = ({ onToggleChat }) => {
                                             <p className="text-[10px] text-gray-500 uppercase tracking-wider">{isHindi ? 'कुल राशि' : 'Total'}</p>
                                             <p className="text-lg font-bold text-gray-900">₹{cartTotal.toFixed(2)}</p>
                                         </div>
-                                        <Link
-                                            to="/checkout"
-                                            onClick={() => setIsCartOpen(false)}
+                                        <button
+                                          onClick={handleCheckout}
+
+                                        
                                             className="bg-[#e14503] text-white px-6 py-2.5 rounded-xl font-bold text-sm"
                                         >
                                             {isHindi ? 'चेकआउट' : 'Checkout'}
-                                        </Link>
+                                        </button>
                                     </div>
                                 </div>
                             )}
