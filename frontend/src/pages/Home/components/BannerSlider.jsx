@@ -4,15 +4,37 @@ import SafeImage from '../../../components/common/SafeImage';
 import MobileBanner from './mobile/MobileBanner';
 
 const BannerSlider = ({ sliders = [] }) => {
+    const localSliders = [
+        {
+            id: 1,
+            image: '/banners/banner1.jpeg',
+            title: 'Banner 1',
+            ctaLink: '/shop'
+        },
+        {
+            id: 2,
+            image: '/banners/banner2.jpeg',
+            title: 'Banner 2',
+            ctaLink: '/puja'
+        },
+        {
+            id: 3,
+            image: '/banners/banner3.jpeg',
+            title: 'Banner 3',
+            ctaLink: '/darshan'
+        }
+    ];
+
+    const slidesToRender = localSliders;
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % sliders.length);
+        setCurrentSlide((prev) => (prev + 1) % slidesToRender.length);
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + sliders.length) % sliders.length);
+        setCurrentSlide((prev) => (prev - 1 + slidesToRender.length) % slidesToRender.length);
     };
 
     const goToSlide = (index) => {
@@ -20,21 +42,21 @@ const BannerSlider = ({ sliders = [] }) => {
     };
 
     useEffect(() => {
-        if (!isAutoPlaying || sliders.length === 0) return;
+        if (!isAutoPlaying || slidesToRender.length === 0) return;
 
         const interval = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % sliders.length);
+            setCurrentSlide((prev) => (prev + 1) % slidesToRender.length);
         }, 5000);
 
         return () => clearInterval(interval);
-    }, [isAutoPlaying, sliders.length]);
+    }, [isAutoPlaying, slidesToRender.length]);
 
-    if (!sliders.length) return null;
+    if (!slidesToRender.length) return null;
 
     return (
         <>
             {/* Mobile Banner */}
-            <MobileBanner slides={sliders} />
+            <MobileBanner slides={slidesToRender} />
 
             {/* Desktop Banner */}
             <div
@@ -43,7 +65,7 @@ const BannerSlider = ({ sliders = [] }) => {
                 onMouseLeave={() => setIsAutoPlaying(true)}
             >
                 <div className="slider-wrapper">
-                    {sliders.map((slide, index) => {
+                    {slidesToRender.map((slide, index) => {
                         const isActive = index === currentSlide;
                         const slideClass = isActive
                             ? 'slide active'
@@ -82,7 +104,7 @@ const BannerSlider = ({ sliders = [] }) => {
 
                 {/* Dots */}
                 <div className="slider-dots">
-                    {sliders.map((_, index) => (
+                    {slidesToRender.map((_, index) => (
                         <button
                             key={index}
                             type="button"

@@ -328,7 +328,7 @@ const ProductDetail = () => {
                         {products?.length > 0 && products?.map((relProduct) => (
                             <Link
                                 key={relProduct.id}
-                                to={`/product/${relProduct.id}`}
+                                to={`/product/${relProduct.slug}`}
                                 className="min-w-[160px] bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm snap-center flex-shrink-0"
                             >
                                 <div className="h-40 overflow-hidden bg-gray-100">
@@ -608,7 +608,7 @@ const ProductDetail = () => {
                             {products?.length > 0 && products?.map((relProduct) => (
                                 <Link
                                     key={relProduct.id}
-                                    to={`/product/${relProduct.id}`}
+                                    to={`/product/${relProduct.slug}`}
                                     className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#e14503] hover:shadow-xl transition-all duration-300 group"
                                 >
                                     <div className="h-56 overflow-hidden bg-gray-100">

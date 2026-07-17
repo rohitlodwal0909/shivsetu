@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    container_name: shivsetu-backend
+    ports:
+      - "5001:5000"
+    restart: always
+
+  admin:
+    build: ./admin
+    container_name: shivsetu-admin
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: shivsetu-frontend
+    ports:
+      - "3002:80"
+    depends_on:
+      - backend
+    restart: always

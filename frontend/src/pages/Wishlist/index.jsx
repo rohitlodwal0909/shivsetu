@@ -67,7 +67,7 @@ const Wishlist = () => {
                         <div key={item.id} className="bg-white border-b border-gray-100 p-4">
                             <div className="flex gap-3">
                                 {/* Product Image */}
-                                <Link to={`/product/${item.id}`} className="shrink-0 relative">
+                                <Link to={`/product/${item.slug}`} className="shrink-0 relative">
                                     <img
                                         src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80'}
                                         alt={isHindi ? item.name : (item.nameEn || item.name)}
@@ -84,10 +84,12 @@ const Wishlist = () => {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="min-w-0">
-                                            <p className="text-[10px] text-[#e14503] font-semibold uppercase tracking-wide">{isHindi ? item.categoryHi : item.category}</p>
-                                            <h3 className="text-sm font-bold text-gray-900 line-clamp-2 leading-tight mt-0.5">
-                                                {isHindi ? item.name : (item.nameEn || item.name)}
-                                            </h3>
+                                            <p className="text-[10px] text-[#e14503] font-semibold uppercase tracking-wide">{isHindi ? (item.categoryHi || item.category?.name) : item.category?.name}</p>
+                                            <Link to={`/product/${item.slug}`}>
+                                                <h3 className="text-sm font-bold text-gray-900 line-clamp-2 leading-tight mt-0.5 hover:text-[#e14503] transition-colors">
+                                                    {isHindi ? item.name : (item.nameEn || item.name)}
+                                                </h3>
+                                            </Link>
                                         </div>
                                         <button
                                             onClick={() => removeFromWishlist(item.id)}
@@ -134,27 +136,33 @@ const Wishlist = () => {
                     {wishlistItems.map((item) => (
                         <div key={item.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-[#e14503] hover:shadow-xl transition-all duration-300 group">
                             <div className="relative h-64 overflow-hidden bg-gray-100">
-                                <img
-                                    src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80'}
-                                    alt={isHindi ? item.name : (item.nameEn || item.name)}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                />
+                                <Link to={`/product/${item.slug}`} className="block w-full h-full">
+                                    <img
+                                        src={item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80'}
+                                        alt={isHindi ? item.name : (item.nameEn || item.name)}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                </Link>
                                 {!item.inStock && (
-                                    <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                    <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold z-10">
                                         {isHindi ? 'स्टॉक खत्म' : 'Out of Stock'}
                                     </div>
                                 )}
                                 <button
                                     onClick={() => removeFromWishlist(item.id)}
-                                    className="absolute top-4 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-red-50 transition-colors"
+                                    className="absolute top-4 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-red-50 transition-colors z-10"
                                 >
                                     <FaTrash className="text-red-500" />
                                 </button>
                             </div>
 
                             <div className="p-5">
-                                <p className="text-sm text-[#e14503] font-semibold mb-1">{isHindi ? item.categoryHi : item.category}</p>
-                                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">{isHindi ? item.name : (item.nameEn || item.name)}</h3>
+                                <p className="text-sm text-[#e14503] font-semibold mb-1">{isHindi ? (item.categoryHi || item.category?.name) : item.category?.name}</p>
+                                <Link to={`/product/${item.slug}`}>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 hover:text-[#e14503] transition-colors">
+                                        {isHindi ? item.name : (item.nameEn || item.name)}
+                                    </h3>
+                                </Link>
 
                                 <div className="flex items-center gap-1 mb-3">
                                     {[...Array(5)].map((_, i) => (

@@ -10,6 +10,7 @@ import { FaShoppingBag, FaChevronLeft, FaLock, FaCheck } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 import { useDispatch } from 'react-redux';
 import { createOrder, rezorpay, verifyPayment } from '../../features/order/OrderSlice';
+import loadRazorpay from './components/LoadRazorpay';
 
 const Checkout = () => {
     const { user } = useAuth();
@@ -199,15 +200,26 @@ const handlePlaceOrder = async () => {
             }
         };
 
-                    if (!window.Razorpay) {
-                showToast("Razorpay SDK failed to load", {
-                    type: "error",
-                });
-                return;
-            }
+                   const loaded = await loadRazorpay();
 
-            const rzp = new window.Razorpay(options);
-            rzp.open();
+if (!loaded) {
+    showToast("Unable to load Razorpay. Please try again.", {
+        type: "error",
+    });
+    return;
+}
+
+const rzp = new window.Razorpay(options);
+
+rzp.on("payment.failed", function (response) {
+    console.error("Payment Failed:", response.error);
+
+    showToast(response.error.description || "Payment Failed", {
+        type: "error",
+    });
+});
+
+rzp.open();
 
     } catch (error) {
         console.error(error);

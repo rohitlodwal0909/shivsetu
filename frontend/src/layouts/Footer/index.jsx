@@ -163,8 +163,8 @@ const Footer = () => {
                             © {currentYear} ShivSetu.com. {isHindi ? "सभी अधिकार सुरक्षित हैं।" : "All rights reserved."}
                         </p>
                         <div className="flex gap-6">
-                            <Link to="/privacy" className="text-gray-600 hover:text-gray-900 text-sm">Privacy Policy</Link>
-                            <Link to="/terms" className="text-gray-600 hover:text-gray-900 text-sm">Terms of Service</Link>
+                            <Link to="/privacy" className="text-gray-600 hover:text-gray-900 text-sm">{isHindi ? 'गोपनीयता नीति' : 'Privacy Policy'}</Link>
+                            <Link to="/terms" className="text-gray-600 hover:text-gray-900 text-sm">{isHindi ? 'नियम और शर्तें' : 'Terms & Conditions'}</Link>
                         </div>
                     </div>
                 </div>
@@ -260,8 +260,8 @@ const Footer = () => {
                             © {currentYear} ShivSetu.com. All rights reserved.
                         </p>
                         <div className="flex justify-center gap-4">
-                            <Link to="/privacy" className="text-[10px] text-gray-400 hover:text-gray-600">Privacy Policy</Link>
-                            <Link to="/terms" className="text-[10px] text-gray-400 hover:text-gray-600">Terms of Service</Link>
+                            <Link to="/privacy" className="text-[10px] text-gray-400 hover:text-gray-600">{isHindi ? 'गोपनीयता नीति' : 'Privacy Policy'}</Link>
+                            <Link to="/terms" className="text-[10px] text-gray-400 hover:text-gray-600">{isHindi ? 'नियम और शर्तें' : 'Terms & Conditions'}</Link>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 import { FaUser, FaCalendarAlt, FaClock, FaMapMarkerAlt, FaStar, FaArrowRight, FaOm } from 'react-icons/fa';
 import SafeImage from '../../../components/common/SafeImage';
@@ -6,6 +7,7 @@ import MobileKundli from './mobile/MobileKundli';
 
 const KundliSection = () => {
     const { isHindi } = useLanguage();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         dob: '',
@@ -19,7 +21,7 @@ const KundliSection = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Kundli Request:', formData);
+        navigate('/kundli', { state: { formData } });
     };
 
     return (

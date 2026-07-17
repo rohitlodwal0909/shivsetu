@@ -37,6 +37,7 @@ import PackageDetails from '../pages/Packages/PackageDetails';
 import Login from '../pages/Auth/Login';
 import Signup from '../pages/Auth/Signup';
 import ForgotPassword from '../pages/Auth/ForgotPassword';
+import KundliPage from '../pages/Kundli';
 
 
 const AppRoutes = () => {
@@ -66,6 +67,7 @@ const AppRoutes = () => {
                 <Route path="faq" element={<FAQ />} />
                 <Route path="terms" element={<Terms />} />
                 <Route path="privacy" element={<Privacy />} />
+                <Route path="kundli" element={<KundliPage />} />
                 <Route path="booking/cabs" element={<CabBooking />} />
                 <Route path="booking/cabs/book/:id" element={<CabBookingPage />} />
                 <Route path="booking/pandits" element={<PanditBooking />} />

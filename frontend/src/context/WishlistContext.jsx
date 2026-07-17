@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from './ToastContext';
 
 const WishlistContext = createContext();
@@ -12,8 +12,18 @@ export const useWishlist = () => {
 };
 
 export const WishlistProvider = ({ children }) => {
-    const [wishlistItems, setWishlistItems] = useState([]);
+    // Load wishlist from localStorage initially
+    const [wishlistItems, setWishlistItems] = useState(() => {
+        const savedWishlist = localStorage.getItem("shivsetu_wishlist");
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
+    });
+
     const { showToast } = useToast();
+
+    // Save wishlist to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem("shivsetu_wishlist", JSON.stringify(wishlistItems));
+    }, [wishlistItems]);
 
     const addToWishlist = (product) => {
         const exists = wishlistItems.find((item) => item.id === product.id);

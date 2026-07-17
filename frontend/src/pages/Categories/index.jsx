@@ -15,7 +15,6 @@ const Categories = () => {
     dispatch(getCategory())
     },[dispatch])
 
-    console.log(categories)
 
     
     return (
