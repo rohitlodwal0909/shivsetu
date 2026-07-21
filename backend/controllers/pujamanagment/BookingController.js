@@ -14,6 +14,8 @@ exports.getBookings = async (req, res) => {
       order: [["created_at", "DESC"]]
     });
 
+    // ddd
+
     return res.status(200).json({
       success: true,
       data: bookings
