@@ -5,6 +5,7 @@ import fs from 'fs/promises';
 import svgr from '@svgr/rollup';
 
 export default defineConfig({
+      base: '/admin/',
     resolve: {
         alias: {
             src: resolve(__dirname, 'src'),
