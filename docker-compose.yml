@@ -9,6 +9,8 @@ services:
       - "5001:5000"
     env_file:
       - ./backend/.env
+    volumes:
+      - /root/shivsetu/uploads:/app/uploads
 
   admin:
     build:
