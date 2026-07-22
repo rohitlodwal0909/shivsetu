@@ -30,6 +30,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key_path: /home/runner/deploy_key
           port: 22
+
           script: |
             set -e
 
@@ -37,8 +38,11 @@ jobs:
 
             cd /root/shivsetu/shivsetu
 
-            echo "Pulling latest code..."
-            git pull origin main
+            echo "Fetching latest code..."
+            git fetch origin main
+
+            echo "Syncing VPS with GitHub main..."
+            git reset --hard origin/main
 
             echo "Building Docker images..."
             docker compose build
@@ -49,4 +53,4 @@ jobs:
             echo "Checking containers..."
             docker ps
 
-            echo "Deployment completed!"
+            echo "Deployment completed successfully!"
