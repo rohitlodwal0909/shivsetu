@@ -1,25 +1,33 @@
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: shivsetu-backend
+    restart: always
     ports:
       - "5001:5000"
-    restart: always
+    env_file:
+      - ./backend/.env
 
   admin:
-    build: ./admin
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
     container_name: shivsetu-admin
+    restart: always
     ports:
       - "3001:80"
     depends_on:
       - backend
-    restart: always
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: shivsetu-frontend
+    restart: always
     ports:
       - "3002:80"
     depends_on:
       - backend
-    restart: always
