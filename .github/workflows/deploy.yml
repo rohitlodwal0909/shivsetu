@@ -10,14 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check SSH Secret
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          echo "Checking SSH key..."
+
+          if [ -z "$SSH_KEY" ]; then
+            echo "ERROR: VPS_SSH_KEY is EMPTY"
+            exit 1
+          fi
+
+          echo "VPS_SSH_KEY exists"
+          echo "$SSH_KEY" | head -n 1
+          echo "$SSH_KEY" | tail -n 1
+
       - name: Deploy ShivSetu to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
           script: |
             set -e
+
+            echo "SSH Connected Successfully!"
 
             cd /root/shivsetu/shivsetu
 
