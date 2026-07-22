@@ -10,6 +10,8 @@ build/
 .env.local
 .env.production
 
+frontend/src/utils/constants.js
+
 backend/uploads/*
 !backend/uploads/.gitkeep
 
