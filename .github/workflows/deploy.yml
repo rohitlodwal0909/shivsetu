@@ -10,43 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Prepare SSH Key
-        env:
-          SSH_KEY_B64: ${{ secrets.VPS_SSH_KEY_B64 }}
-        run: |
-          echo "$SSH_KEY_B64" | base64 -d > "$HOME/deploy_key"
-          chmod 600 "$HOME/deploy_key"
-
-          echo "SSH key prepared"
-
-          ssh-keygen -y -f "$HOME/deploy_key" > /tmp/public_key
-
-          echo "SSH private key is valid"
-
-      - name: Deploy ShivSetu
+      - name: Deploy ShivSetu to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
-          key_path: /home/runner/deploy_key
+          key: ${{ secrets.VPS_SSH_KEY_B64 }}
           port: 22
+
           script: |
             set -e
 
-            echo "SSH connected successfully"
-
             cd /root/shivsetu/shivsetu
 
-            echo "Pulling latest code..."
-            git pull origin main
+            echo "Fetching latest code..."
+            git fetch origin main
 
-            echo "Building Docker images..."
+            echo "Syncing VPS with GitHub main..."
+            git reset --hard origin/main
+
+            echo "Building Docker containers..."
             docker compose build
 
-            echo "Starting containers..."
+            echo "Starting Docker containers..."
             docker compose up -d
 
             echo "Checking containers..."
             docker ps
 
-            echo "Deployment completed!"
+            echo "Deployment completed successfully!"
