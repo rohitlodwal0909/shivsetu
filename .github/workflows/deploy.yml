@@ -10,10 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Prepare SSH Private Key
       - name: Prepare SSH Key
         env:
           SSH_KEY_B64: ${{ secrets.VPS_SSH_KEY_B64 }}
         run: |
+          set -e
+
           echo "$SSH_KEY_B64" | base64 -d > "$HOME/deploy_key"
           chmod 600 "$HOME/deploy_key"
 
@@ -23,6 +26,21 @@ jobs:
 
           echo "SSH private key is valid"
 
+      # 2. Test VPS Port 22
+      - name: Test VPS SSH Port
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          set -e
+
+          echo "Testing VPS connection..."
+          echo "VPS Host: $VPS_HOST"
+
+          timeout 10 bash -c "</dev/tcp/$VPS_HOST/22"
+
+          echo "Port 22 is reachable"
+
+      # 3. Deploy to VPS
       - name: Deploy ShivSetu
         uses: appleboy/ssh-action@v1.2.0
         with:
