@@ -162,7 +162,7 @@ const SidebarContent: MenuItem[] = [
           id: uniqueId(),
           name: "Orders",
           icon: "ph:clipboard-text-thin",
-          url: "product-management/orders",
+          url: "/admin/product-management/orders",
         },
         // {
         //   id: uniqueId(),
