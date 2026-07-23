@@ -57,7 +57,7 @@ const AuthLogin = () => {
       const token = data.token;
       localStorage.setItem('user', user);
       localStorage.setItem('token', token);
-      navigate('/');
+      navigate('/admin');
     } catch (error: any) {
       const errorMsg = error?.message;
       toast.error(errorMsg);
