@@ -4,28 +4,28 @@ import SafeImage from '../../../components/common/SafeImage';
 import MobileBanner from './mobile/MobileBanner';
 
 const BannerSlider = ({ sliders = [] }) => {
-    const localSliders = [
-        {
-            id: 1,
-            image: '/banners/banner1.jpeg',
-            title: 'Banner 1',
-            ctaLink: '/shop'
-        },
-        {
-            id: 2,
-            image: '/banners/banner2.jpeg',
-            title: 'Banner 2',
-            ctaLink: '/puja'
-        },
-        {
-            id: 3,
-            image: '/banners/banner3.jpeg',
-            title: 'Banner 3',
-            ctaLink: '/darshan'
-        }
-    ];
+    // const localSliders = [
+    //     {
+    //         id: 1,
+    //         image: '/banners/banner1.jpeg',
+    //         title: 'Banner 1',
+    //         ctaLink: '/shop'
+    //     },
+    //     {
+    //         id: 2,
+    //         image: '/banners/banner2.jpeg',
+    //         title: 'Banner 2',
+    //         ctaLink: '/puja'
+    //     },
+    //     {
+    //         id: 3,
+    //         image: '/banners/banner3.jpeg',
+    //         title: 'Banner 3',
+    //         ctaLink: '/darshan'
+    //     }
+    // ];
 
-    const slidesToRender = localSliders;
+    const slidesToRender = sliders;
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
